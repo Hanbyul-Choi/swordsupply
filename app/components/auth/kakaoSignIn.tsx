@@ -1,0 +1,19 @@
+import React from 'react';
+
+import {supabase} from '@/supabase/supabase.config';
+
+function KakaoSignIn() {
+  return (
+    <button
+      className="mt-2 py-2 px-4 border-2 border-black rounded-md text-2xl"
+      onClick={() => {
+        supabase.auth.signInWithOAuth({
+          provider: 'kakao',
+        });
+      }}>
+      kakao
+    </button>
+  );
+}
+
+export default KakaoSignIn;
