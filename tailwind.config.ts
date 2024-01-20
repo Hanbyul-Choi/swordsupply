@@ -9,7 +9,8 @@ const config: Config = {
   theme: {
     extend: {
       fontFamily: {
-        gasoek: ['var(--font-gasoek)'],
+        anton: ['var(--font-anton)'],
+        roboto: ['var(--font-roboto)'],
       },
       colors: {
         navy: '#101828',

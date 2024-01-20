@@ -11,7 +11,7 @@ function LoginModal() {
     <button
       className="text-center bg-cream hover:bg-cream-lighter rounded-full"
       onClick={() => {
-        mount('testModal1', <AuthModal />);
+        mount('AuthModal', <AuthModal />);
       }}>
       Login
     </button>

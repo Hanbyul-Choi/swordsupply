@@ -1,13 +1,13 @@
 import {useEffect, useState} from 'react';
 
-import {useRouter} from 'next/navigation';
+import {apiSignIn, apiSignUp} from '@/app/src/api/auth';
+import useSessionStore from '@/app/src/store/session.store';
 
-import {apiSignIn, apiSignUp} from '@/app/api/auth';
-import useSessionStore from '@/app/store/session.store';
+import {useModal} from '../overlay/modal/useModal';
 
 export default function useSign(SignType: 'SignIn' | 'SignUp') {
   const oppositeSignType = SignType === 'SignIn' ? 'SignUp' : 'SignIn';
-  const router = useRouter();
+  const {unmount} = useModal();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [passwordConfirm, setPasswordConfirm] = useState('');
@@ -53,7 +53,7 @@ export default function useSign(SignType: 'SignIn' | 'SignUp') {
     const data = await apiSignIn({email, password});
     if (data) {
       setSession(data.session.user);
-      router.push('/');
+      unmount('AuthModal');
     }
   };
 
