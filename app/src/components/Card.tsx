@@ -1,46 +1,30 @@
 'use client';
-import type {ChangeEvent} from 'react';
 import React, {useState} from 'react';
 
 import {Select} from 'antd';
 import Link from 'next/link';
 
+import CountControl from './common/CountControl';
+import {useCountControl} from './common/useCountControl';
 import {addCommas} from '../utils/common';
 
 interface CardProps {
   productName: string;
   options: string[];
-  eventPrice: number;
+  eventPrice: number | null;
   originPrice: number;
   thumbnail: string;
   product_id: string;
+  images: string[];
+  description: string;
 }
 
 function Card({productName, options = [], eventPrice, originPrice, thumbnail, product_id}: CardProps) {
-  const [count, setCount] = useState<string | number>(1);
+  const {count, onChangeCount, onClickMinus, onClickPlus} = useCountControl();
   const [size, setSize] = useState<null | string>(null);
 
   const handleChange = (value: string) => {
     setSize(value);
-  };
-
-  const onClickMinus = () => {
-    setCount(prev => {
-      if (prev === 1) return 1;
-      return Number(prev) - 1;
-    });
-  };
-
-  const onChangeCount = (e: ChangeEvent<HTMLInputElement>) => {
-    if (Number(e.target.value) < 0 || Number(e.target.value) > 99) return;
-    return setCount(e.target.value);
-  };
-
-  const onClickPlus = () => {
-    setCount(prev => {
-      if (Number(prev) === 99) return 99;
-      return Number(prev) + 1;
-    });
   };
 
   const putInCart = () => {
@@ -60,10 +44,14 @@ function Card({productName, options = [], eventPrice, originPrice, thumbnail, pr
           <img src={thumbnail} alt="예시이미지" />
         </div>
         <p className="border-b-[1px] pb-1 w-full text-center">{productName}</p>
-        <div className="flex gap-6">
-          <p className="line-through">￦{addCommas(originPrice)}</p>
-          <p>￦{addCommas(eventPrice)}</p>
-        </div>
+        {eventPrice ? (
+          <div className="flex gap-6">
+            <p className="line-through">￦{addCommas(originPrice)}</p>
+            <p>￦{addCommas(eventPrice)}</p>
+          </div>
+        ) : (
+          <p className="">￦{addCommas(originPrice)}</p>
+        )}
       </Link>
 
       <div className="flex gap-2 w-full">
@@ -77,17 +65,12 @@ function Card({productName, options = [], eventPrice, originPrice, thumbnail, pr
             })}
           />
         )}
-
-        {/* 개수 설정 부분 */}
-        <div className="flex gap-2 border-[1px] rounded-md w-full justify-around items-center">
-          <button className="w-full text-2xl font-light text-start pl-2" onClick={onClickMinus}>
-            -
-          </button>
-          <input className="w-8 text-center" value={count} onChange={onChangeCount} />
-          <button className="w-full text-2xl font-light text-end pr-2" onClick={onClickPlus}>
-            +
-          </button>
-        </div>
+        <CountControl
+          count={count}
+          onChangeCount={onChangeCount}
+          onClickMinus={onClickMinus}
+          onClickPlus={onClickPlus}
+        />
       </div>
 
       <button onClick={putInCart} className="w-full bg-black text-white p-2 rounded-md">
