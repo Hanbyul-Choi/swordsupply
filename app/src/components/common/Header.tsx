@@ -17,8 +17,23 @@ const navMenuItems = [
     font: 'font-roboto',
   },
   {
-    name: '상품 목록',
-    path: '/products',
+    name: 'BRAND1',
+    path: '/products/brand1',
+    font: '',
+  },
+  {
+    name: 'BRAND2',
+    path: '/products/brand2',
+    font: '',
+  },
+  {
+    name: 'BRAND3',
+    path: '/products/brand3',
+    font: '',
+  },
+  {
+    name: 'BRAND4',
+    path: '/products/brand4',
     font: '',
   },
   {
@@ -64,13 +79,13 @@ function Header() {
           <BsCart4 size={25} />
         </div>
       </div>
-      <nav className="flex gap-10 justify-center">
+      <nav className="flex gap-8 justify-center">
         {navMenuItems.map(item => (
           <Link
             href={item.path}
             key={item.name}
-            className={`${item.font} p-2 hover:border-b-[3px] hover:border-black ${
-              curPath === item.path ? 'border-b-[3px] border-black' : ''
+            className={`${item.font} p-2 border-b-[3px]  hover:border-black ${
+              curPath === item.path ? 'border-b-[3px] border-black' : 'border-transparent'
             }`}>
             {item.name}
           </Link>

@@ -2,7 +2,7 @@ import React from 'react';
 
 import Card from '../Card';
 
-const mock = [
+export const mock = [
   {
     productName: '오리지널 블랙(BLK) 8oz, 1oz',
     options: ['8oz', '1oz'],

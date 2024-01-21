@@ -53,7 +53,7 @@ function Card({productName, options = [], eventPrice, originPrice, thumbnail, pr
 
   return (
     <div className="flex flex-col items-center p-2 gap-2">
-      <Link href={`/products/${product_id}`} className="flex flex-col items-center gap-2">
+      <Link href={`/products/detail/${product_id}`} className="flex flex-col items-center gap-2">
         {/* <Image src={'/'} alt="" width={0} height={0} sizes="100" style={{width: '100%'}} /> */}
         {/* <div className="w-60 h-60 bg-slate-800" /> */}
         <div className="w-60 h-60">
