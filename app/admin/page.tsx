@@ -1,12 +1,17 @@
 'use client';
 import React from 'react';
 
-import useSessionStore from '../src/store/session.store';
+import PostModal from '../src/components/admin/postModal';
 
 function Page() {
-  const {session} = useSessionStore();
-  console.log(session);
-  return <div>admin</div>;
+  return (
+    <div className="max-w-[1280px] flex flex-col justify-center items-center mt-52">
+      <h3 className="text-3xl">관리자 페이지</h3>
+      <div className="w-full flex justify-end p-8">
+        <PostModal />
+      </div>
+    </div>
+  );
 }
 
 export default Page;

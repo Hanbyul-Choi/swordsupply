@@ -34,6 +34,41 @@ export interface Database {
   }
   public: {
     Tables: {
+      carts: {
+        Row: {
+          cart_id: string
+          cart_list: Json[] | null
+          created_at: string
+          order_status: boolean | null
+          total_price: string | null
+          user_id: string | null
+        }
+        Insert: {
+          cart_id?: string
+          cart_list?: Json[] | null
+          created_at?: string
+          order_status?: boolean | null
+          total_price?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          cart_id?: string
+          cart_list?: Json[] | null
+          created_at?: string
+          order_status?: boolean | null
+          total_price?: string | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "carts_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["user_id"]
+          }
+        ]
+      }
       products: {
         Row: {
           created_at: string
