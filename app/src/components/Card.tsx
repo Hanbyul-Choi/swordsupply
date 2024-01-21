@@ -9,20 +9,17 @@ import {useCountControl} from './common/useCountControl';
 import {addCommas} from '../utils/common';
 
 interface CardProps {
-  productName: string;
+  product_name: string;
   options: string[];
   eventPrice: number | null;
   originPrice: number;
   thumbnail: string;
   product_id: string;
-  images: string[];
-  description: string;
 }
 
-function Card({productName, options = [], eventPrice, originPrice, thumbnail, product_id}: CardProps) {
+function Card({product_name, options = [], eventPrice, originPrice, thumbnail, product_id}: CardProps) {
   const {count, onChangeCount, onClickMinus, onClickPlus} = useCountControl();
   const [size, setSize] = useState<null | string>(null);
-
   const handleChange = (value: string) => {
     setSize(value);
   };
@@ -43,7 +40,7 @@ function Card({productName, options = [], eventPrice, originPrice, thumbnail, pr
         <div className="w-60 h-60">
           <img src={thumbnail} alt="예시이미지" />
         </div>
-        <p className="border-b-[1px] pb-1 w-full text-center">{productName}</p>
+        <p className="border-b-[1px] pb-1 w-full text-center">{product_name}</p>
         {eventPrice ? (
           <div className="flex gap-6">
             <p className="line-through">￦{addCommas(originPrice)}</p>

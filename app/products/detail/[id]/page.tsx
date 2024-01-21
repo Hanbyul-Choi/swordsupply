@@ -53,7 +53,7 @@ function Page({params: {id}}: {params: {id: string}}) {
         </div>
         <article className="space-y-8 px-4 p-4 min-w-96">
           <div className="border-b-2 pb-3 space-y-2">
-            <h3 className="text-2xl">{detailData.productName}</h3>
+            <h3 className="text-2xl">{detailData.product_name}</h3>
             {detailData.eventPrice ? (
               <div className="flex gap-4 items-center">
                 <p className="line-through">￦{addCommas(detailData.originPrice)}</p>

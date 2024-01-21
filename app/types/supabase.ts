@@ -34,7 +34,90 @@ export interface Database {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      products: {
+        Row: {
+          created_at: string
+          description: string | null
+          event_price: string | null
+          images: string[] | null
+          options: string[] | null
+          origin_price: string | null
+          product_id: string
+          product_name: string | null
+          thumbnail: string | null
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          event_price?: string | null
+          images?: string[] | null
+          options?: string[] | null
+          origin_price?: string | null
+          product_id?: string
+          product_name?: string | null
+          thumbnail?: string | null
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          event_price?: string | null
+          images?: string[] | null
+          options?: string[] | null
+          origin_price?: string | null
+          product_id?: string
+          product_name?: string | null
+          thumbnail?: string | null
+        }
+        Relationships: []
+      }
+      users: {
+        Row: {
+          address: string | null
+          address_detail: string | null
+          created_at: string
+          email: string | null
+          phone: string | null
+          point: number | null
+          role: string
+          user_id: string
+        }
+        Insert: {
+          address?: string | null
+          address_detail?: string | null
+          created_at?: string
+          email?: string | null
+          phone?: string | null
+          point?: number | null
+          role?: string
+          user_id: string
+        }
+        Update: {
+          address?: string | null
+          address_detail?: string | null
+          created_at?: string
+          email?: string | null
+          phone?: string | null
+          point?: number | null
+          role?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "users_phone_fkey"
+            columns: ["phone"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["phone"]
+          },
+          {
+            foreignKeyName: "users_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: true
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          }
+        ]
+      }
     }
     Views: {
       [_ in never]: never

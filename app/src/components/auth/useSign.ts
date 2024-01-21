@@ -1,9 +1,11 @@
 import {useEffect, useState} from 'react';
 
-import {apiSignIn, apiSignUp} from '@/app/src/api/auth';
+import {apiSignIn, apiSignUp, getUser, setUserData} from '@/app/src/api/auth';
 import useSessionStore from '@/app/src/store/session.store';
 
 import {useModal} from '../overlay/modal/useModal';
+
+import type {TablesInsert} from '@/app/types/supabase';
 
 export default function useSign(SignType: 'SignIn' | 'SignUp') {
   const oppositeSignType = SignType === 'SignIn' ? 'SignUp' : 'SignIn';
@@ -40,6 +42,11 @@ export default function useSign(SignType: 'SignIn' | 'SignUp') {
     } else if (SignType === 'SignIn') {
       SignIn(email, password);
     }
+    setEmail('');
+    setPassword('');
+    setPasswordConfirm('');
+
+    unmount('AuthModal');
   };
 
   const SignUp = async (email: string, password: string) => {
@@ -51,9 +58,20 @@ export default function useSign(SignType: 'SignIn' | 'SignUp') {
 
   const SignIn = async (email: string, password: string) => {
     const data = await apiSignIn({email, password});
+
     if (data) {
-      setSession(data.session.user);
-      unmount('AuthModal');
+      const user_id = data.session.user.id;
+      const userData = await getUser(user_id);
+      if (!userData) {
+        const userData: TablesInsert<'users'> = {
+          user_id,
+          email,
+        };
+        await setUserData(userData);
+        setSession(await getUser(user_id));
+      } else {
+        setSession(userData);
+      }
     }
   };
 

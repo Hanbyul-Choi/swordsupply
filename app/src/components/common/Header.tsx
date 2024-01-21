@@ -10,6 +10,7 @@ import {FaUser} from 'react-icons/fa6';
 import useSessionStore from '@/app/src/store/session.store';
 import {supabase} from '@/supabase/supabase.config';
 
+import {getUser} from '../../api/auth';
 import LoginModal from '../LoginModal';
 
 import type {MenuProps} from 'antd';
@@ -69,9 +70,10 @@ function Header() {
   ];
 
   useEffect(() => {
-    supabase.auth.onAuthStateChange((event, session) => {
+    supabase.auth.onAuthStateChange(async (event, session) => {
       if (session) {
-        setSession(session.user);
+        const user_id = session.user.id;
+        setSession(await getUser(user_id));
       }
     });
   }, []);

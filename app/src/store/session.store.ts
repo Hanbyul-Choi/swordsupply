@@ -1,11 +1,11 @@
 import {create} from 'zustand';
 
-import type {User} from '@supabase/supabase-js';
+import type {Tables} from '@/app/types/supabase';
 
 interface SessionStore {
-  session: User | null;
+  session: Tables<'users'> | null;
   isLoaded: boolean;
-  setSession: (newSession: User | null) => void;
+  setSession: (newSession: Tables<'users'> | null) => void;
   signOut: () => void;
 }
 
