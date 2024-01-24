@@ -24,7 +24,8 @@ function Card({product}: {product: Tables<'products'>}) {
 
   const putInCart = () => {
     const form = {
-      curOption,
+      product_id: product.product_id,
+      option: curOption,
       count,
     };
     return form;
