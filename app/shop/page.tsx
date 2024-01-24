@@ -1,5 +1,5 @@
 'use client';
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 
 import {useQuery} from '@tanstack/react-query';
 
@@ -9,19 +9,24 @@ import ProductList from '../src/components/shop/ProductList';
 
 function Page() {
   const {data: brands} = useQuery({queryKey: ['brands'], queryFn: getBrands});
+  const defaultBrand = brands?.brands[0];
   const [selectedBrand, setSelectedBrand] = useState('');
 
   const selectBrandHandler = (brand: string) => {
     setSelectedBrand(brand);
   };
 
-  const defaultBrand = brands?.brands[0];
+  useEffect(() => {
+    if (brands) {
+      setSelectedBrand(brands.brands[0]);
+    }
+  }, [brands]);
 
   return (
     <section className="mt-52 max-w-[1080px] mx-auto flex flex-col items-center">
-      {defaultBrand && (
+      {defaultBrand && brands && (
         <>
-          <BrandNavBar selectBrandHandler={selectBrandHandler} brands={brands?.brands} />
+          <BrandNavBar selectBrandHandler={selectBrandHandler} brands={brands?.brands} selectedBrand={selectedBrand} />
           <ProductList defaultBrand={defaultBrand} selectedBrand={selectedBrand} />
         </>
       )}
