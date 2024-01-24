@@ -50,7 +50,7 @@ export const OverlayProvider = ({children}: PropsWithChildren) => {
   return (
     <OverlayContext.Provider value={context}>
       {children}
-      {[...overlays.entries()].map(([id, element]) => (
+      {Array.from(overlays.entries()).map(([id, element]) => (
         <Fragment key={id}>{element}</Fragment>
       ))}
     </OverlayContext.Provider>

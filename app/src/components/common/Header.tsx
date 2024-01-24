@@ -17,28 +17,13 @@ import type {MenuProps} from 'antd';
 
 const navMenuItems = [
   {
-    name: 'ABOUT',
+    name: 'ABOUT US',
     path: '/about',
     font: 'font-roboto',
   },
   {
-    name: 'BRAND1',
-    path: '/products/brand1',
-    font: 'font-roboto',
-  },
-  {
-    name: 'BRAND2',
-    path: '/products/brand2',
-    font: 'font-roboto',
-  },
-  {
-    name: 'BRAND3',
-    path: '/products/brand3',
-    font: 'font-roboto',
-  },
-  {
-    name: 'BRAND4',
-    path: '/products/brand4',
+    name: 'SHOP',
+    path: '/shop/brand1',
     font: 'font-roboto',
   },
   {

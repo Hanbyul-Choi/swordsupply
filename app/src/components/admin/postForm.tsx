@@ -2,23 +2,38 @@
 import type {ChangeEvent, FormEvent} from 'react';
 import React, {useState} from 'react';
 
-import Link from 'next/link';
-
-import SelectBox from './post/selectBox';
+import AddOptions from './post/addOptions';
 import UploadBox from './post/uploadBox';
 import UploadThumbnail from './post/uploadThumbnail';
+import {useAddOption} from './post/useAddOption';
 import {postPost} from '../../api/admin';
+import {useModal} from '../overlay/modal/useModal';
 
 function PostForm() {
+  const {unmount} = useModal();
+  const [optionsCheck, setOptionsCheck] = useState(false);
   const [product_name, setProduct_name] = useState('');
   const [description, setDescription] = useState('');
+  const [event_price, setEvent_price] = useState('');
+  const [origin_price, setOrigin_price] = useState('');
   const [thumbnail, setThumbnail] = useState('');
-  const [category, setCategory] = useState('');
   const images: string[] = [];
+
+  const {options, handleAddOption, handleInputChange, handleRemoveOption} = useAddOption();
 
   const onChangeTitle = (e: ChangeEvent<HTMLInputElement>) => {
     const {value} = e.target;
     setProduct_name(value);
+  };
+
+  const onChangeEventPrice = (e: ChangeEvent<HTMLInputElement>) => {
+    const {value} = e.target;
+    setEvent_price(value);
+  };
+
+  const onChangeOriginPrice = (e: ChangeEvent<HTMLInputElement>) => {
+    const {value} = e.target;
+    setOrigin_price(value);
   };
 
   const onChangeContent = (e: ChangeEvent<HTMLTextAreaElement>) => {
@@ -26,14 +41,9 @@ function PostForm() {
     setDescription(value);
   };
 
-  const selectCategory = (value: string) => {
-    setCategory(value);
-  };
-
   const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (product_name === '') return alert('제목을 입력하세요');
-    if (category === '') return alert('제품을 선택하세요');
     if (thumbnail === '') return alert('썸네일 사진을 등록하세요');
     if (description === '' && images.length === 0) return alert('본문에 들어갈 내용을 작성해주세요');
 
@@ -42,41 +52,76 @@ function PostForm() {
       description,
       thumbnail,
       images,
-      category,
+      options,
+      origin_price,
+      event_price,
     };
     const error = await postPost(newPost);
     if (error) {
       return;
     }
     alert('등록이 완료되었습니다.');
+    // unmount('PostModal');
   };
 
   return (
-    <div className="w-full flex flex-col items-center gap-10 p-8">
+    <div className="w-full flex flex-col items-center p-8">
       <p className="text-3xl">상품 추가</p>
       <form className="flex flex-col items-center" onSubmit={onSubmit}>
-        <div className="flex flex-col gap-4">
+        <div className="flex flex-col">
           <label>
-            제목<span className="text-red-500">*</span>
+            상품명<span className="text-red-500">*</span>
           </label>
-          <input
-            type="text"
-            placeholder="제목을 입력하세요"
-            className="border w-[30rem] p-2"
-            onChange={onChangeTitle}
-            value={product_name}
-          />
-          <label>본문</label>
+          <input type="text" className="border w-[30rem] p-2 mt-2 mb-4" onChange={onChangeTitle} value={product_name} />
+          <label>상품 설명</label>
           <textarea
-            placeholder="본문 입력하세요"
-            className="resize-none border p-2 h-40"
+            placeholder="상품 설명 입력"
+            className="resize-none border p-2 h-40 mt-2 mb-4"
             value={description}
             onChange={onChangeContent}
           />
-          <div>
-            <SelectBox selectCategory={selectCategory} />
+          <div className="flex items-center mt-2">
+            <label>옵션 설정</label>
+            <input
+              type="checkbox"
+              className="ml-2 w-4 h-4"
+              onChange={() => {
+                setOptionsCheck(prev => !prev);
+              }}
+            />
           </div>
-          <label>
+          {optionsCheck ? (
+            <AddOptions
+              options={options}
+              handleAddOption={handleAddOption}
+              handleInputChange={handleInputChange}
+              handleRemoveOption={handleRemoveOption}
+            />
+          ) : (
+            <div className="flex gap-4">
+              <div>
+                <label>
+                  정가<span className="text-red-500">*</span>
+                </label>
+                <input
+                  type="number"
+                  className="border w-[10rem] p-2 ml-2 mt-2 mb-4"
+                  onChange={onChangeOriginPrice}
+                  value={origin_price}
+                />
+              </div>
+              <div>
+                <label>할인가</label>
+                <input
+                  type="text"
+                  className="border w-[10rem] p-2 ml-2 mt-2 mb-4"
+                  onChange={onChangeEventPrice}
+                  value={event_price}
+                />
+              </div>
+            </div>
+          )}
+          <label className="mb-2">
             썸네일<span className="text-red-500">*</span> <span className="text-slate-500">(MAX : 1장)</span>
           </label>
           <UploadThumbnail setThumbnail={setThumbnail} />
@@ -92,10 +137,15 @@ function PostForm() {
           </div>
         </div>
         <div className="flex gap-10">
-          <Link href={'/admin'} className="p-2 px-2 w-fit rounded-lg mt-4 border-2 border-black">
+          <button
+            type="button"
+            className="p-2 px-2 w-fit rounded-lg mt-4 border-2 border-black"
+            onClick={() => unmount('PostModal')}>
             취소하기
-          </Link>
-          <button className="bg-primary p-2 px-2 w-fit text-white rounded-lg mt-4">등록하기</button>
+          </button>
+          <button type="submit" className="p-2 px-2 w-fit rounded-lg mt-4 border-2 border-black">
+            상품 게시하기
+          </button>
         </div>
       </form>
     </div>

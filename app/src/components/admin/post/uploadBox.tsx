@@ -79,7 +79,7 @@ export function UploadBox({images}: {images: string[]}) {
         onPreview={handlePreview}
         onChange={handleChange}
         multiple
-        maxCount={10}
+        maxCount={5}
         accept="image/*"
         beforeUpload={beforeUpload}>
         {fileList.length >= 10 ? null : uploadButton}

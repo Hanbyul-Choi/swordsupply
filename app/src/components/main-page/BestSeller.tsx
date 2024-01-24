@@ -1,6 +1,9 @@
 import React from 'react';
 
+import {getBestSeller} from '../../api/products';
 import Card from '../Card';
+
+import type {Tables} from '@/app/types/supabase';
 
 export const mock = [
   {
@@ -128,21 +131,14 @@ export const mock = [
   },
 ];
 
-function BestSeller() {
+async function BestSeller() {
+  const bestSellerData = await getBestSeller();
   return (
     <section className="flex flex-col justify-center items-center">
       <h3 className="text-2xl font-roboto font-bold underline">BEST SELLER</h3>
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mt-10">
-        {mock.map(item => (
-          <Card
-            key={item.product_id}
-            product_name={item.product_name}
-            options={item.options}
-            eventPrice={item.eventPrice}
-            originPrice={item.originPrice}
-            thumbnail={item.thumbnail}
-            product_id={item.product_id}
-          />
+        {bestSellerData?.map((item: Tables<'products'>) => (
+          <Card key={item.product_id} product={item} />
         ))}
       </div>
     </section>
