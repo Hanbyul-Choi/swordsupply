@@ -14,7 +14,7 @@ import {addCommas, findPrice} from '@/app/src/utils/common';
 
 import type {Option} from '@/app/src/components/admin/post/useAddOption';
 
-function Page({params: {id, brand}}: {params: {id: string; brand: string}}) {
+function Page({params: {id}, searchParams: {brand}}: {params: {id: string}; searchParams: {brand: string}}) {
   const {count, onChangeCount, onClickMinus, onClickPlus} = useCountControl();
   const {data, isLoading} = useQuery({queryKey: [brand], queryFn: () => getProductsWithBrand(brand)});
 

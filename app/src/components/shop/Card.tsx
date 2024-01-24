@@ -32,7 +32,9 @@ function Card({product}: {product: Tables<'products'>}) {
 
   return (
     <div className="flex flex-col items-center p-2 gap-2">
-      <Link href={`/shop/${product.brand}/detail/${product.product_id}`} className="flex flex-col items-center gap-2">
+      <Link
+        href={`/shop/detail/${product.product_id}?brand=${product.brand}`}
+        className="flex flex-col items-center gap-2">
         <div className="w-60 h-60 relative">
           <Image src={product.thumbnail ?? ''} alt="" fill sizes="100" style={{objectFit: 'cover'}} />
         </div>
