@@ -51,27 +51,24 @@ export interface Database {
       carts: {
         Row: {
           cart_id: string;
-          cart_list: Json[] | null;
+          cart_list: Json[];
           created_at: string;
-          order_status: boolean | null;
-          total_price: string | null;
-          user_id: string | null;
+          order_status: boolean;
+          user_id: string;
         };
         Insert: {
           cart_id?: string;
-          cart_list?: Json[] | null;
+          cart_list?: Json[];
           created_at?: string;
-          order_status?: boolean | null;
-          total_price?: string | null;
-          user_id?: string | null;
+          order_status?: boolean;
+          user_id: string;
         };
         Update: {
           cart_id?: string;
-          cart_list?: Json[] | null;
+          cart_list?: Json[];
           created_at?: string;
-          order_status?: boolean | null;
-          total_price?: string | null;
-          user_id?: string | null;
+          order_status?: boolean;
+          user_id?: string;
         };
         Relationships: [
           {
@@ -94,6 +91,7 @@ export interface Database {
           origin_price: string;
           product_id: string;
           product_name: string | null;
+          status: string;
           thumbnail: string | null;
         };
         Insert: {
@@ -106,6 +104,7 @@ export interface Database {
           origin_price?: string;
           product_id?: string;
           product_name?: string | null;
+          status?: string;
           thumbnail?: string | null;
         };
         Update: {
@@ -118,6 +117,7 @@ export interface Database {
           origin_price?: string;
           product_id?: string;
           product_name?: string | null;
+          status?: string;
           thumbnail?: string | null;
         };
         Relationships: [];

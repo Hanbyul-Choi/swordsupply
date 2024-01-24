@@ -10,6 +10,14 @@ export const postPost = async (newPost: TablesInsert<'products'>) => {
   }
 };
 
+export const deletePost = async (id: string) => {
+  const {error} = await supabase.from('products').delete().eq('product_id', id);
+  if (error) {
+    console.log(error);
+    return error;
+  }
+};
+
 export const uploadImg = async ({imgName, imgFile}: {imgName: string; imgFile: File}) => {
   const {error} = await supabase.storage.from('post_images').upload(`img/${imgName}`, imgFile, {
     cacheControl: '3600',
