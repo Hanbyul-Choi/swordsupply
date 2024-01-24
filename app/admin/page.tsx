@@ -1,7 +1,7 @@
 'use client';
 import React from 'react';
 
-import {useQuery} from '@tanstack/react-query';
+import {useQuery, useQueryClient} from '@tanstack/react-query';
 import {Dropdown, theme} from 'antd';
 import Image from 'next/image';
 import {BsThreeDots} from 'react-icons/bs';
@@ -16,16 +16,19 @@ import type {Option} from '../src/components/admin/post/useAddOption';
 const {useToken} = theme;
 function Page() {
   const {data: brand} = useQuery({queryKey: ['brands'], queryFn: getBrands});
+  // const curBrand = brand?.brands[0];
   const {data} = useQuery({
-    queryKey: [brand?.brands[0]],
-    queryFn: () => getProductsWithBrand(brand?.brands[0] || ''),
+    queryKey: ['brand1'],
+    queryFn: () => getProductsWithBrand('brand1'),
   });
+  const queryClient = useQueryClient();
 
   const deleteProduct = (id: string) => {
     const check = confirm('정말 삭제하시겠습니다?');
     if (check) {
-      console.log(id);
       deletePost(id);
+      alert('삭제 완료!');
+      queryClient.refetchQueries({queryKey: ['brand1']});
     }
   };
 
