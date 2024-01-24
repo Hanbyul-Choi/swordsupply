@@ -23,7 +23,7 @@ const navMenuItems = [
   },
   {
     name: 'SHOP',
-    path: '/shop/brand1',
+    path: '/shop',
     font: 'font-roboto',
   },
   {

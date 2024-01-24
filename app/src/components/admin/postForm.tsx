@@ -2,14 +2,21 @@
 import type {ChangeEvent, FormEvent} from 'react';
 import React, {useState} from 'react';
 
+import {useQuery} from '@tanstack/react-query';
+
 import AddOptions from './post/addOptions';
 import UploadBox from './post/uploadBox';
 import UploadThumbnail from './post/uploadThumbnail';
 import {useAddOption} from './post/useAddOption';
-import {postPost} from '../../api/admin';
+import {getBrands, postPost, updateBrands} from '../../api/admin';
+import BrandSelect from '../common/BrandSelect';
+import {useBrandSelect} from '../common/useBrandSelect';
 import {useModal} from '../overlay/modal/useModal';
 
 function PostForm() {
+  const {data: brand} = useQuery({queryKey: ['brands'], queryFn: getBrands});
+  const brandProps = useBrandSelect(brand?.brands || []);
+  const {items, brandChanged, selectedBrand} = brandProps;
   const {unmount} = useModal();
   const [optionsCheck, setOptionsCheck] = useState(false);
   const [product_name, setProduct_name] = useState('');
@@ -47,21 +54,26 @@ function PostForm() {
     if (thumbnail === '') return alert('썸네일 사진을 등록하세요');
     if (description === '' && images.length === 0) return alert('본문에 들어갈 내용을 작성해주세요');
 
+    if (brandChanged) {
+      updateBrands(items);
+    }
+
     const newPost = {
       product_name,
       description,
       thumbnail,
       images,
-      options,
-      origin_price,
-      event_price,
+      brand: selectedBrand,
+      options: optionsCheck ? options : [],
+      origin_price: optionsCheck ? '' : origin_price,
+      event_price: optionsCheck ? '' : event_price,
     };
     const error = await postPost(newPost);
     if (error) {
       return;
     }
     alert('등록이 완료되었습니다.');
-    // unmount('PostModal');
+    unmount('PostModal');
   };
 
   return (
@@ -72,11 +84,20 @@ function PostForm() {
           <label>
             상품명<span className="text-red-500">*</span>
           </label>
-          <input type="text" className="border w-[30rem] p-2 mt-2 mb-4" onChange={onChangeTitle} value={product_name} />
-          <label>상품 설명</label>
+          <input
+            type="text"
+            className="border w-[30rem] p-2 mt-2 mb-4 rounded-md"
+            onChange={onChangeTitle}
+            value={product_name}
+          />
+          <label className="mb-2">
+            브랜드<span className="text-red-500">*</span>
+          </label>
+          <BrandSelect brandProps={brandProps} />
+          <label className="mt-4">상품 설명</label>
           <textarea
             placeholder="상품 설명 입력"
-            className="resize-none border p-2 h-40 mt-2 mb-4"
+            className="resize-none border p-2 h-40 mt-2 mb-4 rounded-md"
             value={description}
             onChange={onChangeContent}
           />
@@ -105,7 +126,7 @@ function PostForm() {
                 </label>
                 <input
                   type="number"
-                  className="border w-[10rem] p-2 ml-2 mt-2 mb-4"
+                  className="border w-[10rem] p-2 ml-2 mt-2 mb-4 rounded-md"
                   onChange={onChangeOriginPrice}
                   value={origin_price}
                 />
@@ -114,7 +135,7 @@ function PostForm() {
                 <label>할인가</label>
                 <input
                   type="text"
-                  className="border w-[10rem] p-2 ml-2 mt-2 mb-4"
+                  className="border w-[10rem] p-2 ml-2 mt-2 mb-4 rounded-md"
                   onChange={onChangeEventPrice}
                   value={event_price}
                 />
@@ -139,12 +160,12 @@ function PostForm() {
         <div className="flex gap-10">
           <button
             type="button"
-            className="p-2 px-2 w-fit rounded-lg mt-4 border-2 border-black"
+            className="p-2 px-2 w-24 rounded-lg mt-4 border-2 border-black"
             onClick={() => unmount('PostModal')}>
-            취소하기
+            취소
           </button>
-          <button type="submit" className="p-2 px-2 w-fit rounded-lg mt-4 border-2 border-black">
-            상품 게시하기
+          <button type="submit" className="p-2 px-2 w-24 rounded-lg mt-4 border-2 bg-black text-white border-black">
+            상품게시
           </button>
         </div>
       </form>

@@ -30,6 +30,24 @@ export interface Database {
   };
   public: {
     Tables: {
+      brand: {
+        Row: {
+          brands: string[];
+          created_at: string;
+          id: number;
+        };
+        Insert: {
+          brands?: string[];
+          created_at?: string;
+          id?: number;
+        };
+        Update: {
+          brands?: string[];
+          created_at?: string;
+          id?: number;
+        };
+        Relationships: [];
+      };
       carts: {
         Row: {
           cart_id: string;
@@ -70,10 +88,10 @@ export interface Database {
           brand: string;
           created_at: string;
           description: string | null;
-          event_price: string | null;
+          event_price: string;
           images: string[] | null;
-          options: Json[] | null;
-          origin_price: string | null;
+          options: Json[];
+          origin_price: string;
           product_id: string;
           product_name: string | null;
           thumbnail: string | null;
@@ -82,10 +100,10 @@ export interface Database {
           brand?: string;
           created_at?: string;
           description?: string | null;
-          event_price?: string | null;
+          event_price?: string;
           images?: string[] | null;
-          options?: Json[] | null;
-          origin_price?: string | null;
+          options?: Json[];
+          origin_price?: string;
           product_id?: string;
           product_name?: string | null;
           thumbnail?: string | null;
@@ -94,10 +112,10 @@ export interface Database {
           brand?: string;
           created_at?: string;
           description?: string | null;
-          event_price?: string | null;
+          event_price?: string;
           images?: string[] | null;
-          options?: Json[] | null;
-          origin_price?: string | null;
+          options?: Json[];
+          origin_price?: string;
           product_id?: string;
           product_name?: string | null;
           thumbnail?: string | null;

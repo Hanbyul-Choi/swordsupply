@@ -1,7 +1,7 @@
 import React from 'react';
 
 import {getBestSeller} from '../../api/products';
-import Card from '../Card';
+import Card from '../shop/Card';
 
 import type {Tables} from '@/app/types/supabase';
 

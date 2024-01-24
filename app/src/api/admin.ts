@@ -24,3 +24,13 @@ export const getPostImgUrl = (imgName: string) => {
   const {data} = supabase.storage.from('post_images').getPublicUrl(`img/${imgName}`);
   return data.publicUrl;
 };
+
+export const getBrands = async () => {
+  const {data} = await supabase.from('brand').select('*').single();
+  return data;
+};
+
+export const updateBrands = async (newBrands: string[]) => {
+  const {data} = await supabase.from('brand').update({brands: newBrands}).eq('id', 1);
+  return data;
+};

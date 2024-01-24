@@ -5,11 +5,11 @@ import {Select} from 'antd';
 import Image from 'next/image';
 import Link from 'next/link';
 
-import CountControl from './common/CountControl';
-import {useCountControl} from './common/useCountControl';
-import PriceSection from './PriceSection';
+import CountControl from '../common/CountControl';
+import {useCountControl} from '../common/useCountControl';
+import PriceSection from '../PriceSection';
 
-import type {Option} from './admin/post/useAddOption';
+import type {Option} from '../admin/post/useAddOption';
 import type {Tables} from '@/app/types/supabase';
 
 function Card({product}: {product: Tables<'products'>}) {

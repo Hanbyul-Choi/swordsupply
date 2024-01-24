@@ -12,13 +12,17 @@ interface Props {
 }
 
 function PriceSection({event_price, options, origin_price, cur_option}: Props) {
-  return event_price || options?.length! > 0 ? (
+  return event_price !== '' || findPrice('event_price', cur_option, options) !== '' ? (
     <div className="flex gap-6">
-      <p className="line-through">￦{addCommas(origin_price ?? findPrice('origin_price', cur_option, options))}</p>
-      <p>￦{addCommas(event_price ?? findPrice('event_price', cur_option, options))}</p>
+      <p className="line-through">
+        ￦{addCommas(origin_price !== '' ? origin_price! : findPrice('origin_price', cur_option, options))}
+      </p>
+      <p>￦{addCommas(event_price !== '' ? event_price! : findPrice('event_price', cur_option, options))}</p>
     </div>
   ) : (
-    <p className="">￦{addCommas(origin_price ?? findPrice('origin_price', cur_option, options))}</p>
+    <p className="">
+      ￦{addCommas(origin_price !== '' ? origin_price! : findPrice('origin_price', cur_option, options))}
+    </p>
   );
 }
 

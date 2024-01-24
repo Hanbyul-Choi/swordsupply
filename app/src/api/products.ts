@@ -6,6 +6,6 @@ export const getProductsWithBrand = async (brand: string) => {
 };
 
 export const getBestSeller = async () => {
-  const {data} = await supabase.from('products').select('*').range(0, 8);
+  const {data} = await supabase.from('products').select('*').range(0, 7);
   return data;
 };

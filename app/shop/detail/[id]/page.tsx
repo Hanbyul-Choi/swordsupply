@@ -57,16 +57,6 @@ function Page({params: {id, brand}}: {params: {id: string; brand: string}}) {
               <img src={img} key={i} alt="제품 썸네일" style={{width: '100%'}} />
             ))}
           </Carousel>
-          <div className="w-80">
-            {/* <Image=
-            src={detailData.thumbnail}
-            alt="제품 썸네일"
-            width={0}
-            height={0}
-            sizes="100"
-            style={{width: '100%'}}
-          /> */}
-          </div>
         </div>
         <article className="space-y-8 w-1/2">
           <div className="border-b-2 pb-3 space-y-2">
