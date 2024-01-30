@@ -15,7 +15,7 @@ function CountControl({count, onChangeCount, onClickMinus, onClickPlus}: props) 
       <button className="w-full text-2xl font-light text-start pl-2" onClick={onClickMinus}>
         -
       </button>
-      <input className="w-8 text-center bg-transparent" value={count} onChange={onChangeCount} />
+      <input className="w-8 text-center bg-transparent font-light" value={count} onChange={onChangeCount} />
       <button className="w-full text-2xl font-light text-end pr-2" onClick={onClickPlus}>
         +
       </button>

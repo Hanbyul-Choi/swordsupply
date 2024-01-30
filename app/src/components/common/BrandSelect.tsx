@@ -10,21 +10,22 @@ import type {InputRef} from 'antd';
 const {Option} = Select;
 
 interface Props {
-  onNameChange: (event: ChangeEvent<HTMLInputElement>) => void;
-  inputRef: Ref<InputRef>;
-  name: string;
   addItem: (e: MouseEvent<HTMLButtonElement | HTMLAnchorElement>) => void;
   deleteItem: (e: MouseEvent<HTMLElement>, index: number) => void;
-  items: string[];
+  onNameChange: (event: ChangeEvent<HTMLInputElement>) => void;
   handleChange: (value: string) => void;
+  name: string;
+  inputRef: Ref<InputRef>;
+  items: string[];
 }
 
-const BrandSelect = ({brandProps}: {brandProps: Props}) => {
+const BrandSelect = ({brandProps, curOpt}: {brandProps: Props; curOpt?: string}) => {
   const {onNameChange, inputRef, name, addItem, items, deleteItem, handleChange} = brandProps;
   return (
     <Select
-      style={{width: '100%', fontWeight: 'bold', color: '#9ca3af'}}
+      style={{width: '100%', color: '#9ca3af'}}
       placeholder="선택"
+      defaultValue={curOpt}
       onChange={handleChange}
       dropdownRender={menu => {
         return (
@@ -39,7 +40,7 @@ const BrandSelect = ({brandProps}: {brandProps: Props}) => {
                 onChange={onNameChange}
                 onKeyDown={e => e.stopPropagation()}
               />
-              <Button type="text" icon={<PlusOutlined />} onClick={addItem}>
+              <Button type="text" icon={<PlusOutlined />} onClick={addItem} className="text-sm">
                 브랜드 추가하기
               </Button>
             </Space>
@@ -56,7 +57,7 @@ const BrandSelect = ({brandProps}: {brandProps: Props}) => {
             }}>
             <div>{item}</div>
             <Button onClick={e => deleteItem(e, index)} danger size="small">
-              Delete
+              삭제
             </Button>
           </div>
         </Option>

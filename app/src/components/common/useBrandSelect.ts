@@ -1,11 +1,16 @@
 import type {ChangeEvent, MouseEvent} from 'react';
 import {useRef, useState} from 'react';
 
+import {useQueryClient} from '@tanstack/react-query';
+
+import {updateBrands} from '../../api/admin';
+
 import type {InputRef} from 'antd';
 
-export const useBrandSelect = (brand: string[]) => {
+export const useBrandSelect = (brand: string[], defaultBrand?: string) => {
+  const queryClient = useQueryClient();
   const [items, setItems] = useState(brand);
-  const [selectedBrand, setSelectedBrand] = useState('');
+  const [selectedBrand, setSelectedBrand] = useState(defaultBrand || '');
   const [name, setName] = useState('');
   const [brandChanged, setBrandChanged] = useState(false);
   const inputRef = useRef<InputRef>(null);
@@ -14,7 +19,7 @@ export const useBrandSelect = (brand: string[]) => {
     setName(event.target.value);
   };
 
-  const addItem = (e: MouseEvent<HTMLButtonElement | HTMLAnchorElement>) => {
+  const addItem = async (e: MouseEvent<HTMLButtonElement | HTMLAnchorElement>) => {
     e.preventDefault();
     if (items.length > 6) {
       alert('브랜드는 최대 7개까지 등록가능합니다.');
@@ -25,6 +30,8 @@ export const useBrandSelect = (brand: string[]) => {
       return;
     }
     setItems([...items, name]);
+    await updateBrands([...items, name]);
+    queryClient.refetchQueries({queryKey: ['brands']});
     setBrandChanged;
     setName('');
     setTimeout(() => {
@@ -36,7 +43,7 @@ export const useBrandSelect = (brand: string[]) => {
     setSelectedBrand(value);
   };
 
-  const deleteItem = (e: MouseEvent<HTMLElement>, index: number) => {
+  const deleteItem = async (e: MouseEvent<HTMLElement>, index: number) => {
     e.stopPropagation();
     e.preventDefault();
     const check = confirm(
@@ -46,6 +53,8 @@ export const useBrandSelect = (brand: string[]) => {
       const updated = [...items];
       updated.splice(index, 1);
       setItems(updated);
+      await updateBrands(updated);
+      queryClient.refetchQueries({queryKey: ['brands']});
     }
   };
   return {addItem, brandChanged, deleteItem, items, inputRef, onNameChange, name, selectedBrand, handleChange};

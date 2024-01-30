@@ -1,7 +1,7 @@
 'use client';
 import React from 'react';
 
-import PostForm from './postForm';
+import PostForm from './form/postForm';
 import {useModal} from '../overlay/modal/useModal';
 
 function PostModal() {
@@ -9,7 +9,7 @@ function PostModal() {
 
   return (
     <button
-      className="border-2 border-black px-2 p-1 rounded-sm bg-blue opacity-80 hover:opacity-100 text-white"
+      className="px-2 rounded-sm bg-blue opacity-80 hover:opacity-100 text-white"
       onClick={() => {
         mount('PostModal', <PostForm />);
       }}>

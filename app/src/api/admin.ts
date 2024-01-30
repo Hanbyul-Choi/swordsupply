@@ -1,6 +1,6 @@
 import {supabase} from '@/supabase/supabase.config';
 
-import type {TablesInsert} from '@/app/types/supabase';
+import type {TablesInsert, TablesUpdate} from '@/app/types/supabase';
 
 export const postPost = async (newPost: TablesInsert<'products'>) => {
   const {error} = await supabase.from('products').insert(newPost);
@@ -39,6 +39,22 @@ export const getBrands = async () => {
 };
 
 export const updateBrands = async (newBrands: string[]) => {
-  const {data} = await supabase.from('brand').update({brands: newBrands}).eq('id', 1);
+  const {data} = await supabase.from('brand').update({brands: newBrands}).eq('id', 1).select();
+  return data;
+};
+
+export const updateProducts = async (newProducts: TablesUpdate<'products'>, id: string) => {
+  const {data, error} = await supabase.from('products').update(newProducts).eq('product_id', id).select();
+  if (error) {
+    console.log(error);
+  }
+  return data;
+};
+
+export const updateProductStatus = async (id: string, status: string) => {
+  const {data, error} = await supabase.from('products').update({status}).eq('product_id', id).select();
+  if (error) {
+    console.log(error);
+  }
   return data;
 };

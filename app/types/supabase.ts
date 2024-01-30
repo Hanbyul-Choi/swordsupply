@@ -82,6 +82,7 @@ export interface Database {
       };
       products: {
         Row: {
+          best_seller: boolean;
           brand: string;
           created_at: string;
           description: string | null;
@@ -95,6 +96,7 @@ export interface Database {
           thumbnail: string | null;
         };
         Insert: {
+          best_seller?: boolean;
           brand?: string;
           created_at?: string;
           description?: string | null;
@@ -108,6 +110,7 @@ export interface Database {
           thumbnail?: string | null;
         };
         Update: {
+          best_seller?: boolean;
           brand?: string;
           created_at?: string;
           description?: string | null;

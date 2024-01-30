@@ -30,6 +30,17 @@ function Card({product}: {product: Tables<'products'>}) {
     };
     return form;
   };
+  let statusMsg = '카트에 담기';
+
+  switch (product.status) {
+    case 'SoldOut':
+      statusMsg = '품절';
+      break;
+
+    case 'ComingSoon':
+      statusMsg = '입고 예정';
+      break;
+  }
 
   return (
     <div className="flex flex-col items-center p-2 gap-2">
@@ -68,11 +79,13 @@ function Card({product}: {product: Tables<'products'>}) {
         />
       </div>
       <div className="flex gap-2 w-full">
-        <button onClick={putInCart} className="w-full bg-black text-white p-2 rounded-md hover:opacity-80">
-          주문하기
-        </button>
-        <button onClick={putInCart} className="w-full bg-slate-500 text-white p-2 rounded-md hover:opacity-80">
-          카트에 담기
+        <button
+          onClick={putInCart}
+          className={`w-full bg-black text-white p-2 rounded-md hover:opacity-80 ${
+            product.status !== 'Available' && 'bg-slate-500'
+          }`}
+          disabled={product.status !== 'Available'}>
+          {statusMsg}
         </button>
       </div>
     </div>
