@@ -22,5 +22,9 @@ export const useCountControl = () => {
       return Number(prev) + 1;
     });
   };
-  return {count, onClickMinus, onChangeCount, onClickPlus};
+
+  const initCount = () => {
+    setCount(1);
+  };
+  return {count, onClickMinus, onChangeCount, onClickPlus, initCount};
 };

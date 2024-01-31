@@ -12,7 +12,9 @@ function BrandNavBar({selectBrandHandler, brands, selectedBrand}: Props) {
         <button
           key={index}
           onClick={() => selectBrandHandler(brand)}
-          className={`px-3 hover:text-black ${selectedBrand === brand ? 'text-black' : 'text-slate-400 '}`}>
+          className={`px-3 pt-2 border-t-2 hover:text-black ${
+            selectedBrand === brand ? 'text-black border-black' : 'text-slate-400 border-transparent'
+          }`}>
           {brand.toUpperCase()}
         </button>
       ))}

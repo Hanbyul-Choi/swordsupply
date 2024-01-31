@@ -17,7 +17,7 @@ function Page({searchParams: {brand}}: {searchParams: {brand: string}}) {
   };
 
   return (
-    <section className="mt-52 max-w-[1080px] mx-auto flex flex-col items-center">
+    <section className="mt-44 max-w-[1080px] mx-auto flex flex-col items-center">
       {defaultBrand && brands && (
         <>
           <BrandNavBar

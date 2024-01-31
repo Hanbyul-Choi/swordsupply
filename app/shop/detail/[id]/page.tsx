@@ -19,7 +19,7 @@ import type {Tables} from '@/app/types/supabase';
 
 function Page({params: {id}, searchParams: {brand}}: {params: {id: string}; searchParams: {brand: string}}) {
   const queryClient = useQueryClient();
-  const {count, onChangeCount, onClickMinus, onClickPlus} = useCountControl();
+  const {count, onChangeCount, onClickMinus, onClickPlus, initCount} = useCountControl();
   const cacheData: any = queryClient.getQueryData([brand]);
   const {data, isLoading} = useQuery({queryKey: [brand, 'detail'], queryFn: () => getProductsWithBrand(brand)});
 
@@ -41,6 +41,7 @@ function Page({params: {id}, searchParams: {brand}}: {params: {id: string}; sear
 
   const handleChange = (value: string) => {
     setCurOption(value);
+    initCount();
   };
 
   const putInCart = () => {
@@ -53,7 +54,7 @@ function Page({params: {id}, searchParams: {brand}}: {params: {id: string}; sear
 
   if (isLoading) {
     return (
-      <div className="w-full mx-auto flex justify-center mt-32 ">
+      <div className="w-full mx-auto flex justify-center mt-96">
         <BarLoader color="#36d7b7" width={200} height={5} />
       </div>
     );
@@ -75,8 +76,8 @@ function Page({params: {id}, searchParams: {brand}}: {params: {id: string}; sear
       break;
   }
   return (
-    <div className="mt-60 max-w-[1080px] mx-auto flex flex-col items-center p-8">
-      <div className="w-full mb-8">
+    <div className="mt-52 max-w-[1080px] mx-auto flex flex-col items-center p-8">
+      <div className="w-full mb-12">
         <Breadcrumb
           items={[
             {

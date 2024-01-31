@@ -97,7 +97,7 @@ function PostForm() {
   };
 
   return (
-    <div className="w-full flex flex-col items-center p-8 text-sm">
+    <div className="w-full flex flex-col items-center p-8 text-sm shadow-[1px_4px_7px_0_rgba(53,60,73,0.4)]">
       <p className="text-3xl">상품 추가</p>
       <form className="flex flex-col items-center" onSubmit={onSubmit}>
         <div className="flex flex-col">

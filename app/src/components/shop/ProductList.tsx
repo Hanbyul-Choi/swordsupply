@@ -34,15 +34,15 @@ function ProductList({defaultBrand, selectedBrand}: {defaultBrand: string; selec
 
   if (isLoading) {
     return (
-      <div className="w-full mx-auto flex justify-center mt-32">
-        <BarLoader color="#36d7b7" />
+      <div className="absolute w-full h-full mx-auto flex justify-center items-center">
+        <BarLoader color="#36d7b7" width={200} height={5} />
       </div>
     );
   }
 
   return (
     <>
-      <h2 className="text-3xl mt-10">{(selectedBrand || defaultBrand).toUpperCase()}</h2>
+      <h2 className="text-3xl mt-20">{(selectedBrand || defaultBrand).toUpperCase()}</h2>
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mt-24">
         {productData?.map((item: Tables<'products'>) => (
           <Card key={item.product_id} product={item} />
