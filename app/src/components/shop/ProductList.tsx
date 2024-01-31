@@ -16,8 +16,8 @@ function ProductList({defaultBrand, selectedBrand}: {defaultBrand: string; selec
 
   return (
     <>
-      <h2 className="text-3xl">{(selectedBrand || defaultBrand).toUpperCase()}</h2>
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mt-32">
+      <h2 className="text-3xl mt-10">{(selectedBrand || defaultBrand).toUpperCase()}</h2>
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mt-24">
         {data?.map((item: Tables<'products'>) => (
           <Card key={item.product_id} product={item} />
         ))}

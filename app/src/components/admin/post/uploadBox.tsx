@@ -36,7 +36,15 @@ export function UploadBox({images}: {images: string[]}) {
   const [previewOpen, setPreviewOpen] = useState(false);
   const [previewImage, setPreviewImage] = useState('');
   const [previewTitle, setPreviewTitle] = useState('');
-  const [fileList, setFileList] = useState<UploadFile[]>([]);
+  const defaultImages: UploadFile[] = images.map((url, idx) => {
+    return {
+      uid: '-' + idx + 1,
+      name: `image${idx + 1}`,
+      status: 'done',
+      url,
+    };
+  });
+  const [fileList, setFileList] = useState<UploadFile[]>(defaultImages);
 
   const handleCancel = () => setPreviewOpen(false);
 

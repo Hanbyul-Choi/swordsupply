@@ -7,7 +7,13 @@ import {v4} from 'uuid';
 
 import {getPostImgUrl, uploadImg} from '@/app/src/api/admin';
 
-function UploadThumbnail({setThumbnail}: {setThumbnail: Dispatch<SetStateAction<string>>}) {
+function UploadThumbnail({
+  setThumbnail,
+  defaultImg,
+}: {
+  setThumbnail: Dispatch<SetStateAction<string>>;
+  defaultImg?: string;
+}) {
   const handleFileUpload = async ({file, onSuccess}: any) => {
     const imgName = v4();
     const img = {
@@ -19,7 +25,23 @@ function UploadThumbnail({setThumbnail}: {setThumbnail: Dispatch<SetStateAction<
     setThumbnail(getPostImgUrl(imgName));
   };
   return (
-    <Upload customRequest={handleFileUpload} listType="picture" maxCount={1} accept="image/*">
+    <Upload
+      customRequest={handleFileUpload}
+      listType="picture"
+      maxCount={1}
+      accept="image/*"
+      defaultFileList={
+        defaultImg
+          ? [
+              {
+                uid: '1',
+                name: 'Thumbnail',
+                status: 'done',
+                url: defaultImg,
+              },
+            ]
+          : []
+      }>
       <Button icon={<UploadOutlined />}>Upload</Button>
     </Upload>
   );

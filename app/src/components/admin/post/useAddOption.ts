@@ -9,20 +9,31 @@ export interface Option {
   event_price: string;
 }
 
-export function useAddOption() {
-  const [options, setOptions] = useState<Option[]>([
-    {
-      option_name: '',
-      origin_price: '',
-      event_price: '',
-    },
-  ]);
-
+export function useAddOption(defaultOptions?: Option[]) {
+  const [options, setOptions] = useState<Option[]>(
+    defaultOptions || [
+      {
+        option_name: '',
+        origin_price: '',
+        event_price: '',
+      },
+    ],
+  );
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const option_form = {
     option_name: '',
     origin_price: '',
     event_price: '',
+  };
+
+  const initOptions = () => {
+    setOptions([
+      {
+        option_name: '',
+        origin_price: '',
+        event_price: '',
+      },
+    ]);
   };
 
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>, index: number) => {
@@ -31,6 +42,9 @@ export function useAddOption() {
     if (name !== 'option_name') {
       value = value.replaceAll(',', '');
       if (isNaN(Number(value))) {
+        return;
+      }
+      if (Number(value) > 9999999) {
         return;
       }
       value = addCommas(Number(value));
@@ -49,5 +63,5 @@ export function useAddOption() {
     setOptions(newOptions);
   };
 
-  return {handleInputChange, handleAddOption, handleRemoveOption, options};
+  return {handleInputChange, handleAddOption, handleRemoveOption, options, initOptions};
 }

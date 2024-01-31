@@ -48,17 +48,31 @@ function Page({params: {id}, searchParams: {brand}}: {params: {id: string}; sear
   if (!detailData) {
     return <div className="flex justify-center items-center mt-96 text-2xl">해당 제품이 존재하지 않습니다.</div>;
   }
+
+  let statusMsg = '카트에 담기';
+
+  switch (detailData.status) {
+    case 'SoldOut':
+      statusMsg = '품절';
+      break;
+
+    case 'ComingSoon':
+      statusMsg = '입고 예정';
+      break;
+  }
   return (
     <div className="mt-60 max-w-[1080px] mx-auto flex flex-col items-center p-8">
-      <div className="flex justify-center gap-8 w-full">
-        <div className="w-1/2">
+      <div className="flex flex-col justify-center gap-8 w-full md:flex-row">
+        <div className="w-full md:w-1/2">
           <Carousel showArrows={false} showStatus={false} infiniteLoop emulateTouch thumbWidth={70}>
             {detailData.images?.map((img, i) => (
-              <img src={img} key={i} alt="제품 썸네일" style={{width: '100%'}} />
+              <div key={i}>
+                <img src={img} alt="제품 사진" style={{width: '100%', objectFit: 'cover', aspectRatio: '1/1'}} />
+              </div>
             ))}
           </Carousel>
         </div>
-        <article className="space-y-8 w-1/2">
+        <article className="space-y-8 w-full md:w-1/2">
           <div className="border-b-2 pb-3 space-y-2">
             <h3 className="text-2xl">{detailData.product_name}</h3>
             <PriceSection
@@ -148,11 +162,13 @@ function Page({params: {id}, searchParams: {brand}}: {params: {id: string}; sear
             </p>
           </div>
           <div className="flex gap-4">
-            <button onClick={putInCart} className="w-full bg-black text-white p-2 rounded-md hover:opacity-80">
-              주문하기
-            </button>
-            <button onClick={putInCart} className="w-full bg-slate-500 text-white p-2 rounded-md hover:opacity-80">
-              카트에 담기
+            <button
+              onClick={putInCart}
+              className={`w-1/2 ml-auto bg-black text-white p-2 rounded-md hover:opacity-80 ${
+                detailData.status !== 'Available' && 'bg-slate-500'
+              }`}
+              disabled={detailData.status !== 'Available'}>
+              {statusMsg}
             </button>
           </div>
           <div>

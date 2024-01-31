@@ -3,14 +3,14 @@ import React, {useEffect} from 'react';
 
 import {Dropdown} from 'antd';
 import Link from 'next/link';
-import {usePathname} from 'next/navigation';
+import {usePathname, useRouter} from 'next/navigation';
 import {BsCart4} from 'react-icons/bs';
 import {FaUser} from 'react-icons/fa6';
 
 import useSessionStore from '@/app/src/store/session.store';
 import {supabase} from '@/supabase/supabase.config';
 
-import {getUser} from '../../api/auth';
+import {getUser, setUserData} from '../../api/auth';
 import LoginModal from '../LoginModal';
 
 import type {MenuProps} from 'antd';
@@ -34,34 +34,63 @@ const navMenuItems = [
 ];
 
 function Header() {
-  const {session, setSession} = useSessionStore();
+  const {session, signOut: storeSignOut, setSession, isLoaded} = useSessionStore();
   const curPath = usePathname();
+  const router = useRouter();
 
   const signOut = async () => {
     await supabase.auth.signOut();
-    setSession(null);
+    storeSignOut();
     alert('로그아웃 되었습니다.');
+    router.push('/');
   };
-
-  const items: MenuProps['items'] = [
-    {
-      label: <Link href="/myorder">주문내역 조회</Link>,
-      key: '0',
-    },
-    {
-      label: <button onClick={signOut}>로그아웃</button>,
-      key: '1',
-    },
-  ];
-
   useEffect(() => {
     supabase.auth.onAuthStateChange(async (event, session) => {
       if (session) {
-        const user_id = session.user.id;
-        setSession(await getUser(user_id));
+        const {email, id: user_id} = session.user;
+
+        const userData = await getUser(user_id);
+        if (!userData) {
+          const newUser = {
+            user_id,
+            email,
+          };
+          await setUserData(newUser);
+          setSession(await getUser(user_id));
+        }
+        setSession(userData);
+      } else if (session === null) {
+        setSession(null);
       }
     });
   }, []);
+
+  const items: MenuProps['items'] =
+    session?.role !== 'admin'
+      ? [
+          {
+            label: <Link href="/myorder">주문내역 조회</Link>,
+            key: '0',
+          },
+          {
+            label: <button onClick={signOut}>로그아웃</button>,
+            key: '1',
+          },
+        ]
+      : [
+          {
+            label: <Link href="/myorder">주문내역 조회</Link>,
+            key: '0',
+          },
+          {
+            label: <button onClick={signOut}>로그아웃</button>,
+            key: '1',
+          },
+          {
+            label: <Link href="/admin">상품관리</Link>,
+            key: '2',
+          },
+        ];
 
   return (
     <div className="fixed left-0 top-0 w-full pt-8 px-10 flex flex-col justify-center gap-4 bg-white z-10 shadow-[0_1px_4px_0_rgba(53,60,73,0.08)]">
@@ -71,7 +100,7 @@ function Header() {
           SWORDSUPPLY
         </Link>
         <div className="flex gap-10 w-32">
-          {session ? (
+          {isLoaded && session ? (
             <Dropdown menu={{items}}>
               <a onClick={e => e.preventDefault()}>
                 <FaUser size={25} />

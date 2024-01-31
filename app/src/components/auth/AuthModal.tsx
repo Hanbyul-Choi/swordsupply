@@ -22,14 +22,14 @@ const AuthModal = () => {
         <p className="text-lg mx-auto mt-12">
           이미 회원이신가요?
           <button className="text-blue" onClick={() => switchHandler('SignIn')}>
-            &nbsp; 로그인
+            &nbsp; <u>로그인</u>
           </button>
         </p>
       ) : (
         <p className="text-lg mx-auto mt-12">
           아직 회원이 아니신가요?
           <button className="text-blue" onClick={() => switchHandler('SignUp')}>
-            &nbsp; 회원가입
+            &nbsp;<u>회원가입</u>
           </button>
         </p>
       )}

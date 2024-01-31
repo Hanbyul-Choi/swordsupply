@@ -1,6 +1,7 @@
 'use client';
 import React from 'react';
 
+import KakaoSignIn from './kakaoSignIn';
 import useSign from './useSign';
 
 interface ISignForm {
@@ -46,8 +47,8 @@ function SignForm({signType}: ISignForm) {
         </button>
       </form>
       <div className="flex gap-2">
-        {/* <GoogleSignIn />
-        <KakaoSignIn /> */}
+        {/* <GoogleSignIn /> */}
+        <KakaoSignIn />
       </div>
     </div>
   );

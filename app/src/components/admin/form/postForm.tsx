@@ -2,18 +2,21 @@
 import type {ChangeEvent, FormEvent} from 'react';
 import React, {useState} from 'react';
 
-import {useQuery} from '@tanstack/react-query';
+import {useQuery, useQueryClient} from '@tanstack/react-query';
 
-import AddOptions from './post/addOptions';
-import UploadBox from './post/uploadBox';
-import UploadThumbnail from './post/uploadThumbnail';
-import {useAddOption} from './post/useAddOption';
-import {getBrands, postPost, updateBrands} from '../../api/admin';
-import BrandSelect from '../common/BrandSelect';
-import {useBrandSelect} from '../common/useBrandSelect';
-import {useModal} from '../overlay/modal/useModal';
+import {addCommas} from '@/app/src/utils/common';
+
+import {getBrands, postPost, updateBrands} from '../../../api/admin';
+import BrandSelect from '../../common/BrandSelect';
+import {useBrandSelect} from '../../common/useBrandSelect';
+import {useModal} from '../../overlay/modal/useModal';
+import AddOptions from '../post/addOptions';
+import UploadBox from '../post/uploadBox';
+import UploadThumbnail from '../post/uploadThumbnail';
+import {useAddOption} from '../post/useAddOption';
 
 function PostForm() {
+  const queryClient = useQueryClient();
   const {data: brand} = useQuery({queryKey: ['brands'], queryFn: getBrands});
   const brandProps = useBrandSelect(brand?.brands || []);
   const {items, brandChanged, selectedBrand} = brandProps;
@@ -26,7 +29,7 @@ function PostForm() {
   const [thumbnail, setThumbnail] = useState('');
   const images: string[] = [];
 
-  const {options, handleAddOption, handleInputChange, handleRemoveOption} = useAddOption();
+  const {options, handleAddOption, handleInputChange, handleRemoveOption, initOptions} = useAddOption();
 
   const onChangeTitle = (e: ChangeEvent<HTMLInputElement>) => {
     const {value} = e.target;
@@ -34,12 +37,28 @@ function PostForm() {
   };
 
   const onChangeEventPrice = (e: ChangeEvent<HTMLInputElement>) => {
-    const {value} = e.target;
+    let {value} = e.target;
+    value = value.replaceAll(',', '');
+    if (isNaN(Number(value))) {
+      return;
+    }
+    if (Number(value) > 9999999) {
+      return;
+    }
+    value = addCommas(Number(value));
     setEvent_price(value);
   };
 
   const onChangeOriginPrice = (e: ChangeEvent<HTMLInputElement>) => {
-    const {value} = e.target;
+    let {value} = e.target;
+    value = value.replaceAll(',', '');
+    if (isNaN(Number(value))) {
+      return;
+    }
+    if (Number(value) > 9999999) {
+      return;
+    }
+    value = addCommas(Number(value));
     setOrigin_price(value);
   };
 
@@ -73,11 +92,12 @@ function PostForm() {
       return;
     }
     alert('등록이 완료되었습니다.');
+    queryClient.refetchQueries({queryKey: [selectedBrand]});
     unmount('PostModal');
   };
 
   return (
-    <div className="w-full flex flex-col items-center p-8">
+    <div className="w-full flex flex-col items-center p-8 text-sm">
       <p className="text-3xl">상품 추가</p>
       <form className="flex flex-col items-center" onSubmit={onSubmit}>
         <div className="flex flex-col">
@@ -108,6 +128,9 @@ function PostForm() {
               className="ml-2 w-4 h-4"
               onChange={() => {
                 setOptionsCheck(prev => !prev);
+                setEvent_price('');
+                setOrigin_price('');
+                initOptions();
               }}
             />
           </div>
@@ -125,7 +148,7 @@ function PostForm() {
                   정가<span className="text-red-500">*</span>
                 </label>
                 <input
-                  type="number"
+                  type="text"
                   className="border w-[10rem] p-2 ml-2 mt-2 mb-4 rounded-md"
                   onChange={onChangeOriginPrice}
                   value={origin_price}
