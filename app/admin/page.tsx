@@ -24,10 +24,6 @@ function Page() {
   };
 
   const defaultBrand = brands?.brands[0];
-  // const {data} = useQuery({
-  //   queryKey: [selectedBrand !== '' ? selectedBrand : defaultBrand],
-  //   queryFn: () => getProductsWithBrand(selectedBrand !== '' ? selectedBrand : defaultBrand!),
-  // });
 
   const {data, fetchNextPage, hasNextPage, isFetchingNextPage} = useInfiniteQuery({
     queryKey: [selectedBrand !== '' ? selectedBrand : defaultBrand],
