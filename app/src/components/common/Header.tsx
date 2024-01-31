@@ -44,8 +44,9 @@ function Header() {
     alert('로그아웃 되었습니다.');
     router.push('/');
   };
+
   useEffect(() => {
-    supabase.auth.onAuthStateChange(async (event, session) => {
+    supabase.auth.getSession().then(async ({data: {session}}) => {
       if (session) {
         const {email, id: user_id} = session.user;
 
@@ -64,6 +65,27 @@ function Header() {
       }
     });
   }, []);
+
+  // useEffect(() => {
+  //   supabase.auth.onAuthStateChange(async (event, session) => {
+  //     if (session) {
+  //       const {email, id: user_id} = session.user;
+
+  //       const userData = await getUser(user_id);
+  //       if (!userData) {
+  //         const newUser = {
+  //           user_id,
+  //           email,
+  //         };
+  //         await setUserData(newUser);
+  //         setSession(await getUser(user_id));
+  //       }
+  //       setSession(userData);
+  //     } else if (session === null) {
+  //       setSession(null);
+  //     }
+  //   });
+  // }, []);
 
   const items: MenuProps['items'] =
     session?.role !== 'admin'
