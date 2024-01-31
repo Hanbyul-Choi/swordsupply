@@ -2,7 +2,7 @@
 import React, {useEffect, useState} from 'react';
 
 import 'react-responsive-carousel/lib/styles/carousel.min.css';
-import {useQuery} from '@tanstack/react-query';
+import {useQuery, useQueryClient} from '@tanstack/react-query';
 import {Select} from 'antd';
 import {Carousel} from 'react-responsive-carousel';
 
@@ -13,12 +13,20 @@ import PriceSection from '@/app/src/components/PriceSection';
 import {addCommas, findPrice} from '@/app/src/utils/common';
 
 import type {Option} from '@/app/src/components/admin/post/useAddOption';
+import type {Tables} from '@/app/types/supabase';
 
 function Page({params: {id}, searchParams: {brand}}: {params: {id: string}; searchParams: {brand: string}}) {
+  const queryClient = useQueryClient();
   const {count, onChangeCount, onClickMinus, onClickPlus} = useCountControl();
-  const {data, isLoading} = useQuery({queryKey: [brand], queryFn: () => getProductsWithBrand(brand)});
+  const cacheData: any = queryClient.getQueryData([brand]);
+  const {data, isLoading} = useQuery({queryKey: [brand, 'detail'], queryFn: () => getProductsWithBrand(brand)});
 
-  const detailData = data?.find(product => product.product_id === id);
+  let productsData: Tables<'products'>[] = cacheData?.pages?.map((pageData: any) => pageData.data).flat() || [];
+  if (productsData.length === 0) {
+    productsData = data || [];
+  }
+
+  const detailData = productsData?.find(product => product.product_id === id);
 
   const defaulteOption = detailData?.options !== null ? (detailData?.options[0] as Option) : null;
   const [curOption, setCurOption] = useState<null | string>(

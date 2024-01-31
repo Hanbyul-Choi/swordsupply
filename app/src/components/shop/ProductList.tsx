@@ -21,7 +21,7 @@ function ProductList({defaultBrand, selectedBrand}: {defaultBrand: string; selec
     },
   });
 
-  const productData = data?.pages?.map(pageData => pageData.data).flat();
+  const productData = data?.pages?.map(pageData => pageData.data).flat() || [];
 
   const {ref} = useInView({
     threshold: 1,
