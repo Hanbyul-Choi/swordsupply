@@ -7,17 +7,15 @@ interface Props {
 }
 function BrandNavBar({selectBrandHandler, brands, selectedBrand}: Props) {
   return (
-    <div className="mb-4">
-      <div className="flex gap-4">
-        {brands.map((brand, index) => (
-          <button
-            key={index}
-            onClick={() => selectBrandHandler(brand)}
-            className={`px-3 hover:text-black ${selectedBrand === brand ? 'text-black' : 'text-slate-400 '}`}>
-            {brand.toUpperCase()}
-          </button>
-        ))}
-      </div>
+    <div className="flex gap-4 items-center">
+      {brands.map((brand, index) => (
+        <button
+          key={index}
+          onClick={() => selectBrandHandler(brand)}
+          className={`px-3 hover:text-black ${selectedBrand === brand ? 'text-black' : 'text-slate-400 '}`}>
+          {brand.toUpperCase()}
+        </button>
+      ))}
     </div>
   );
 }

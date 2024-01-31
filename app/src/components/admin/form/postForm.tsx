@@ -183,11 +183,11 @@ function PostForm() {
         <div className="flex gap-10">
           <button
             type="button"
-            className="p-2 px-2 w-24 rounded-lg mt-4 border-2 border-black"
+            className="p-2 px-2 w-24 rounded-sm mt-4 border-2 border-blue"
             onClick={() => unmount('PostModal')}>
             취소
           </button>
-          <button type="submit" className="p-2 px-2 w-24 rounded-lg mt-4 border-2 bg-black text-white border-black">
+          <button type="submit" className="p-2 px-2 w-24 rounded-sm mt-4 bg-blue text-white">
             상품게시
           </button>
         </div>

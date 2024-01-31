@@ -3,8 +3,10 @@ import React, {useEffect, useState} from 'react';
 
 import 'react-responsive-carousel/lib/styles/carousel.min.css';
 import {useQuery, useQueryClient} from '@tanstack/react-query';
-import {Select} from 'antd';
+import {Breadcrumb, Select} from 'antd';
+import Link from 'next/link';
 import {Carousel} from 'react-responsive-carousel';
+import {BarLoader} from 'react-spinners';
 
 import {getProductsWithBrand} from '@/app/src/api/products';
 import CountControl from '@/app/src/components/common/CountControl';
@@ -50,7 +52,11 @@ function Page({params: {id}, searchParams: {brand}}: {params: {id: string}; sear
   };
 
   if (isLoading) {
-    return <div>불러오는 중...</div>;
+    return (
+      <div className="w-full mx-auto flex justify-center mt-32 ">
+        <BarLoader color="#36d7b7" width={200} height={5} />
+      </div>
+    );
   }
 
   if (!detailData) {
@@ -70,6 +76,24 @@ function Page({params: {id}, searchParams: {brand}}: {params: {id: string}; sear
   }
   return (
     <div className="mt-60 max-w-[1080px] mx-auto flex flex-col items-center p-8">
+      <div className="w-full mb-8">
+        <Breadcrumb
+          items={[
+            {
+              title: <Link href="/">HOME</Link>,
+            },
+            {
+              title: <a href="/shop">SHOP</a>,
+            },
+            {
+              title: <a href={`/shop?brand=${detailData.brand}`}>{detailData.brand.toUpperCase()}</a>,
+            },
+            {
+              title: `${detailData.product_name}`,
+            },
+          ]}
+        />
+      </div>
       <div className="flex flex-col justify-center gap-8 w-full md:flex-row">
         <div className="w-full md:w-1/2">
           <Carousel showArrows={false} showStatus={false} infiniteLoop emulateTouch thumbWidth={70}>

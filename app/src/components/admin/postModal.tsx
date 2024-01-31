@@ -9,7 +9,7 @@ function PostModal() {
 
   return (
     <button
-      className="px-2 rounded-sm bg-blue opacity-80 hover:opacity-100 text-white"
+      className="px-2 p-1 bg-blue rounded-sm opacity-80 hover:opacity-100 text-white"
       onClick={() => {
         mount('PostModal', <PostForm />);
       }}>

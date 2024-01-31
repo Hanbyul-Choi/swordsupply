@@ -183,11 +183,11 @@ function EditForm({product}: {product: Tables<'products'>}) {
         <div className="flex gap-4 w-1/2">
           <button
             type="button"
-            className="p-2 px-2 w-full rounded-lg mt-4 border-2 border-black"
+            className="p-2 px-2 w-full rounded-lg mt-4 border-2 border-blue"
             onClick={() => unmount('EditModal')}>
             취소
           </button>
-          <button type="submit" className="p-2 px-2 w-full rounded-lg mt-4 border-2 bg-black text-white border-black">
+          <button type="submit" className="p-2 px-2 w-full rounded-lg mt-4 bg-blue text-white">
             상품 수정 완료
           </button>
         </div>

@@ -4,6 +4,7 @@ import React, {useEffect, useState} from 'react';
 import {useInfiniteQuery, useQuery} from '@tanstack/react-query';
 import {useRouter} from 'next/navigation';
 import {useInView} from 'react-intersection-observer';
+import {BarLoader} from 'react-spinners';
 
 import {getBrands} from '../src/api/admin';
 import {getProductsInfinity} from '../src/api/products';
@@ -37,6 +38,7 @@ function Page() {
   });
 
   const productData = data?.pages?.map(pageData => pageData.data).flat();
+  const totalProduct = data?.pages[0].count;
 
   const {ref} = useInView({
     threshold: 1,
@@ -58,7 +60,7 @@ function Page() {
   }, [brands, isLoaded]);
 
   if (!productData) {
-    return;
+    return <BarLoader color="#36d7b7" />;
   }
   return (
     <div className="bg-[#ecf0f4]">
@@ -67,13 +69,16 @@ function Page() {
           <>
             <h3 className="text-3xl w-fit my-10">상품 관리</h3>
             <section className="text-sm">
-              <div className="flex justify-between w-full py-2">
+              <div className="flex justify-between items-center w-full py-2">
                 <BrandNavBar
                   selectBrandHandler={selectBrandHandler}
                   brands={brands?.brands}
                   selectedBrand={selectedBrand}
                 />
-                <PostModal />
+                <div className="text-center">
+                  <p>상품 수 : {totalProduct}</p>
+                  <PostModal />
+                </div>
               </div>
               <table className="bg-white border-[1px] shadow-[0_1px_4px_0_rgba(53,60,73,0.08)]">
                 <thead className="w-full">

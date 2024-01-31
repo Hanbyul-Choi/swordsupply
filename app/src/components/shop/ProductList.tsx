@@ -3,15 +3,16 @@ import React from 'react';
 
 import {useInfiniteQuery} from '@tanstack/react-query';
 import {useInView} from 'react-intersection-observer';
+import {BarLoader} from 'react-spinners';
 
 import Card from './Card';
 import {getProductsInfinity} from '../../api/products';
 
 import type {Tables} from '@/app/types/supabase';
 
-function ProductList({defaultBrand, selectedBrand}: {defaultBrand: string; selectedBrand: string}) {
+function ProductList({defaultBrand, selectedBrand}: {defaultBrand: string; selectedBrand: string | null}) {
   const {data, fetchNextPage, hasNextPage, isFetchingNextPage, isLoading} = useInfiniteQuery({
-    queryKey: [selectedBrand !== '' ? selectedBrand : defaultBrand],
+    queryKey: [selectedBrand ?? defaultBrand],
     queryFn: getProductsInfinity,
     initialPageParam: 1,
     getNextPageParam: lastPage => {
@@ -32,7 +33,11 @@ function ProductList({defaultBrand, selectedBrand}: {defaultBrand: string; selec
   });
 
   if (isLoading) {
-    return <div>불러오는중</div>;
+    return (
+      <div className="w-full mx-auto flex justify-center mt-32">
+        <BarLoader color="#36d7b7" />
+      </div>
+    );
   }
 
   return (
