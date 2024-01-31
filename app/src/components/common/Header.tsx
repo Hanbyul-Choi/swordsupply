@@ -10,7 +10,7 @@ import {FaUser} from 'react-icons/fa6';
 import useSessionStore from '@/app/src/store/session.store';
 import {supabase} from '@/supabase/supabase.config';
 
-import {getUser} from '../../api/auth';
+import {getUser, setUserData} from '../../api/auth';
 import LoginModal from '../LoginModal';
 
 import type {MenuProps} from 'antd';
@@ -47,8 +47,17 @@ function Header() {
   useEffect(() => {
     supabase.auth.onAuthStateChange(async (event, session) => {
       if (session) {
-        const user_id = session.user.id;
+        const {email, id: user_id} = session.user;
+
         const userData = await getUser(user_id);
+        if (!userData) {
+          const newUser = {
+            user_id,
+            email,
+          };
+          await setUserData(newUser);
+          setSession(await getUser(user_id));
+        }
         setSession(userData);
       } else if (session === null) {
         setSession(null);

@@ -9,7 +9,7 @@ import {GoLinkExternal} from 'react-icons/go';
 import {IoIosArrowDown} from 'react-icons/io';
 
 import EditForm from './form/editForm';
-import {deletePost, updateProductStatus} from '../../api/admin';
+import {deletePost, updateBestSeller, updateProductStatus} from '../../api/admin';
 import {addCommas} from '../../utils/common';
 import {useModal} from '../overlay/modal/useModal';
 
@@ -94,6 +94,7 @@ function ListCard({product, index}: {product: Tables<'products'>; index: number}
           </div>
           <Link href={`/shop/detail/${product.product_id}?brand=${product.brand}`} className="flex gap-1">
             {product.product_name}
+            <div className={`bg-[#fe5356] text-white px-2 rounded-sm ${product.best_seller || 'hidden'}`}>BEST</div>
             <div className="text-slate-400">
               <GoLinkExternal />
             </div>
@@ -111,7 +112,7 @@ function ListCard({product, index}: {product: Tables<'products'>; index: number}
             open={statusOpen}
             onOpenChange={handleOpenChangeStatus}
             dropdownRender={() => (
-              <div style={contentStyle} className="flex flex-col overflow-hidden w-32">
+              <div style={contentStyle} className="flex flex-col overflow-hidden">
                 <button onClick={() => clickStatusHandler('Available')} className="p-2 hover:bg-slate-200">
                   판매중
                 </button>
@@ -157,6 +158,16 @@ function ListCard({product, index}: {product: Tables<'products'>; index: number}
                   }}
                   className="p-2 hover:bg-slate-200">
                   삭제
+                </button>
+                <button
+                  onClick={async () => {
+                    await updateBestSeller(product.product_id, !product.best_seller);
+                    setUpdateOpen(false);
+                    queryClient.refetchQueries({queryKey: [product.brand]});
+                  }}
+                  className="p-2 hover:bg-slate-200 flex gap-2">
+                  <div className={`bg-[#fe5356] text-white px-2 rounded-sm `}>BEST</div>
+                  {product.best_seller ? '해제' : '등록'}
                 </button>
               </div>
             )}>

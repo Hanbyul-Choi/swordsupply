@@ -1,11 +1,12 @@
 'use client';
 import React, {useEffect, useState} from 'react';
 
-import {useQuery} from '@tanstack/react-query';
+import {useInfiniteQuery, useQuery} from '@tanstack/react-query';
 import {useRouter} from 'next/navigation';
+import {useInView} from 'react-intersection-observer';
 
 import {getBrands} from '../src/api/admin';
-import {getProductsWithBrand} from '../src/api/products';
+import {getProductsInfinity} from '../src/api/products';
 import ListCard from '../src/components/admin/listCard';
 import PostModal from '../src/components/admin/postModal';
 import BrandNavBar from '../src/components/shop/BrandNavBar';
@@ -23,9 +24,30 @@ function Page() {
   };
 
   const defaultBrand = brands?.brands[0];
-  const {data} = useQuery({
+  // const {data} = useQuery({
+  //   queryKey: [selectedBrand !== '' ? selectedBrand : defaultBrand],
+  //   queryFn: () => getProductsWithBrand(selectedBrand !== '' ? selectedBrand : defaultBrand!),
+  // });
+
+  const {data, fetchNextPage, hasNextPage, isFetchingNextPage} = useInfiniteQuery({
     queryKey: [selectedBrand !== '' ? selectedBrand : defaultBrand],
-    queryFn: () => getProductsWithBrand(selectedBrand !== '' ? selectedBrand : defaultBrand!),
+    queryFn: getProductsInfinity,
+    initialPageParam: 1,
+    getNextPageParam: lastPage => {
+      if (lastPage.page < lastPage.total_pages) {
+        return lastPage.page + 1;
+      }
+    },
+  });
+
+  const productData = data?.pages?.map(pageData => pageData.data).flat();
+
+  const {ref} = useInView({
+    threshold: 1,
+    onChange: inView => {
+      if (!inView || !hasNextPage || isFetchingNextPage) return;
+      fetchNextPage();
+    },
   });
 
   useEffect(() => {
@@ -39,7 +61,7 @@ function Page() {
     }
   }, [brands, isLoaded]);
 
-  if (!data) {
+  if (!productData) {
     return;
   }
   return (
@@ -65,13 +87,18 @@ function Page() {
                     <th className="w-40 text-center">판매가</th>
                     <th className="w-28 text-center">상태</th>
                     <th className="w-32 text-center">등록일</th>
-                    <th className="w-24 text-center">수정/삭제</th>
+                    <th className="w-24 text-center"></th>
                   </tr>
                 </thead>
-                {data.map((product, index) => (
+                {productData.map((product, index) => (
                   <ListCard product={product} index={index} key={index} />
                 ))}
               </table>
+              {hasNextPage && (
+                <div className="h-[55px] w-full text-center flex justify-center items-center mb-[10px]" ref={ref}>
+                  More products...
+                </div>
+              )}
             </section>
           </>
         ) : (
