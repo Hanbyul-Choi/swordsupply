@@ -5,6 +5,9 @@ import {Select} from 'antd';
 import Image from 'next/image';
 import Link from 'next/link';
 
+import {updateCart} from '../../api/cart';
+import useCartStore from '../../store/carts.store';
+import {changeJson, isAlreadyCart} from '../../utils/common';
 import CountControl from '../common/CountControl';
 import {useCountControl} from '../common/useCountControl';
 import PriceSection from '../PriceSection';
@@ -13,6 +16,7 @@ import type {Option} from '../admin/post/useAddOption';
 import type {Tables} from '@/app/types/supabase';
 
 function Card({product}: {product: Tables<'products'>}) {
+  const {cart, setCart} = useCartStore();
   const {count, onChangeCount, onClickMinus, onClickPlus} = useCountControl();
   const defaulteOption = product?.options !== null ? (product?.options[0] as Option) : null;
   const [curOption, setCurOption] = useState<null | string>(
@@ -23,11 +27,21 @@ function Card({product}: {product: Tables<'products'>}) {
   };
 
   const putInCart = () => {
+    if (isAlreadyCart(changeJson(cart.cart_list), product.product_id, curOption)) {
+      alert('이미 카트에 담겨있습니다.');
+      return;
+    }
     const form = {
-      product_id: product.product_id,
-      option: curOption,
+      id: product.product_id,
       count,
+      option: curOption,
     };
+    const newCart = {...cart};
+    newCart.cart_list.push(form);
+    setCart(newCart);
+    updateCart(newCart);
+    alert('카트에 담겼습니다!');
+    console.log(newCart);
     return form;
   };
   let statusMsg = '카트에 담기';

@@ -27,3 +27,8 @@ export const getProductsInfinity = async ({queryKey: brand, pageParam = 1}: any)
   }
   return {data, total_pages: Math.ceil((count ?? 0) / 10), page: pageParam, count};
 };
+export const getCartProducts = async (cartProducts: string[]) => {
+  const {data} = await supabase.from('products').select('*').in('product_id', cartProducts);
+  console.log(cartProducts, data);
+  return data;
+};

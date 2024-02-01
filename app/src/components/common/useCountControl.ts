@@ -1,8 +1,8 @@
 import type {ChangeEvent} from 'react';
 import {useState} from 'react';
 
-export const useCountControl = () => {
-  const [count, setCount] = useState<string | number>(1);
+export const useCountControl = (initCount = '1') => {
+  const [count, setCount] = useState<string | number>(initCount);
 
   const onClickMinus = () => {
     setCount(prev => {
@@ -23,8 +23,8 @@ export const useCountControl = () => {
     });
   };
 
-  const initCount = () => {
+  const resetCount = () => {
     setCount(1);
   };
-  return {count, onClickMinus, onChangeCount, onClickPlus, initCount};
+  return {count, onClickMinus, onChangeCount, onClickPlus, resetCount};
 };
