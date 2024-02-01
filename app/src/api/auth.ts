@@ -1,6 +1,6 @@
 import {supabase} from '@/supabase/supabase.config';
 
-import type {TablesInsert} from '@/app/types/supabase';
+import type {TablesInsert, TablesUpdate} from '@/app/types/supabase';
 
 interface IApiSignUp {
   email: string;
@@ -39,6 +39,14 @@ export const getUser = async (user_id: string) => {
   const {data, error} = await supabase.from('users').select('*').eq('user_id', user_id).single();
   if (error) {
     console.log('first login');
+  }
+  return data;
+};
+
+export const userUpdate = async (user_id: string, updatedData: TablesUpdate<'users'>) => {
+  const {data, error} = await supabase.from('users').update(updatedData).eq('user_id', user_id).select();
+  if (error) {
+    console.log(error);
   }
   return data;
 };

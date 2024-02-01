@@ -61,8 +61,8 @@ function CartCard({product, cart_info}: CardProps) {
     return;
   }
   return (
-    <div className="flex justify-between items-center w-full p-4 bg-gray-400">
-      <div className="flex items-center ">
+    <div className="flex justify-between items-center w-full p-4 bg-white">
+      <div className="flex items-center">
         <div className="w-20 relative mr-8" style={{aspectRatio: '1/1'}}>
           <Image src={product.thumbnail ?? ''} alt="" fill sizes="100" style={{objectFit: 'cover'}} />
         </div>
@@ -100,17 +100,19 @@ function CartCard({product, cart_info}: CardProps) {
             />
           </div>
         </div>
-        {addCommas(
-          Number(
-            (
-              product.event_price ||
-              product.origin_price ||
-              findPrice('event_price', curOption, product.options as Option[]) ||
-              findPrice('origin_price', curOption, product.options as Option[])
-            ).replaceAll(',', ''),
-          ) * Number(count),
-        )}
-        <button onClick={removeItem}>삭제하기</button>
+        <div className="w-24 text-nowrap text-end">
+          {addCommas(
+            Number(
+              (
+                product.event_price ||
+                product.origin_price ||
+                findPrice('event_price', curOption, product.options as Option[]) ||
+                findPrice('origin_price', curOption, product.options as Option[])
+              ).replaceAll(',', ''),
+            ) * Number(count),
+          )}
+          원
+        </div>
       </div>
     </div>
   );

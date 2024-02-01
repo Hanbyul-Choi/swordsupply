@@ -28,3 +28,5 @@ export const updateCart = async (newCarts: TablesInsert<'carts'>) => {
     console.log(error);
   }
 };
+
+export const orderCart = async () => {};

@@ -135,6 +135,8 @@ export interface Database {
           point: number | null;
           role: string;
           user_id: string;
+          user_name: string;
+          zonecode: string;
         };
         Insert: {
           address?: string | null;
@@ -145,6 +147,8 @@ export interface Database {
           point?: number | null;
           role?: string;
           user_id: string;
+          user_name?: string;
+          zonecode?: string;
         };
         Update: {
           address?: string | null;
@@ -155,6 +159,8 @@ export interface Database {
           point?: number | null;
           role?: string;
           user_id?: string;
+          user_name?: string;
+          zonecode?: string;
         };
         Relationships: [
           {
