@@ -19,7 +19,7 @@ import type {Tables} from '@/app/types/supabase';
 
 function Page({params: {id}, searchParams: {brand}}: {params: {id: string}; searchParams: {brand: string}}) {
   const queryClient = useQueryClient();
-  const {count, onChangeCount, onClickMinus, onClickPlus, initCount} = useCountControl();
+  const {count, onChangeCount, onClickMinus, onClickPlus, resetCount} = useCountControl();
   const cacheData: any = queryClient.getQueryData([brand]);
   const {data, isLoading} = useQuery({queryKey: [brand, 'detail'], queryFn: () => getProductsWithBrand(brand)});
 
@@ -41,7 +41,7 @@ function Page({params: {id}, searchParams: {brand}}: {params: {id: string}; sear
 
   const handleChange = (value: string) => {
     setCurOption(value);
-    initCount();
+    resetCount();
   };
 
   const putInCart = () => {

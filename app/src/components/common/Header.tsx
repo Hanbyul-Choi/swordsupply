@@ -7,10 +7,12 @@ import {usePathname, useRouter} from 'next/navigation';
 import {BsCart4} from 'react-icons/bs';
 import {FaUser} from 'react-icons/fa6';
 
+import useCartStore from '@/app/src/store/carts.store';
 import useSessionStore from '@/app/src/store/session.store';
 import {supabase} from '@/supabase/supabase.config';
 
 import {getUser, setUserData} from '../../api/auth';
+import {getCart, postCart} from '../../api/cart';
 import LoginModal from '../LoginModal';
 
 import type {MenuProps} from 'antd';
@@ -35,6 +37,7 @@ const navMenuItems = [
 
 function Header() {
   const {session, signOut: storeSignOut, setSession, isLoaded} = useSessionStore();
+  const {cart, setCart} = useCartStore();
   const curPath = usePathname();
   const router = useRouter();
 
@@ -60,6 +63,13 @@ function Header() {
           setSession(await getUser(user_id));
         }
         setSession(userData);
+        if (user_id) {
+          const user_cart = await getCart(user_id);
+          if (!user_cart) {
+            await postCart({user_id});
+          }
+          setCart(user_cart);
+        }
       } else if (session === null) {
         setSession(null);
       }
@@ -131,8 +141,13 @@ function Header() {
           ) : (
             <LoginModal />
           )}
-          <Link href={'/cart'}>
+          <Link href={'/cart'} className="relative">
             <BsCart4 size={25} />
+            {session && cart && (
+              <div className="bg-red-600 w-6 h-6 rounded-full text-center absolute -top-2 -right-3">
+                <span className="text-white">{cart?.cart_list.length}</span>
+              </div>
+            )}
           </Link>
         </div>
       </div>
