@@ -1,6 +1,7 @@
 'use client';
 import React, {useEffect, useState} from 'react';
 
+import {updateCart} from '../src/api/cart';
 import {getCartProducts} from '../src/api/products';
 import CartCard from '../src/components/cart/cartCard';
 import useCartStore from '../src/store/carts.store';
@@ -21,6 +22,9 @@ function Page() {
           const productData = await getCartProducts(ids);
           setProducts([...products, ...productData]);
         }
+      }
+      if (cart) {
+        updateCart(cart);
       }
     };
     fetchData();
@@ -62,7 +66,7 @@ function Page() {
           <CartCard
             product={products.find(obj => obj.product_id == changeJson(item).id)}
             cart_info={changeJson(item)}
-            key={i}
+            key={changeJson(item).id + i}
           />
         ))}
       </div>

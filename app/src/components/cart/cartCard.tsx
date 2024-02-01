@@ -4,7 +4,6 @@ import React, {useEffect, useState} from 'react';
 import {Select} from 'antd';
 import Image from 'next/image';
 
-import {updateCart} from '../../api/cart';
 import useCartStore from '../../store/carts.store';
 import {addCommas, changeJson, findPrice, isAlreadyCart} from '../../utils/common';
 import CountControl from '../common/CountControl';
@@ -24,7 +23,7 @@ function CartCard({product, cart_info}: CardProps) {
   const {count, onChangeCount, onClickMinus, onClickPlus, resetCount} = useCountControl(cart_info?.count);
   const [curOption, setCurOption] = useState<null | string>(cart_info?.option);
   const {cart, setCart} = useCartStore();
-
+  console.log(curOption);
   useEffect(() => {
     const originCartList = changeJson([...cart.cart_list]); // [{id:a, count:1},{id:b, count:2}]
     originCartList.map(obj => {
@@ -36,19 +35,6 @@ function CartCard({product, cart_info}: CardProps) {
     const newCart = {...cart, cart_list: originCartList};
     setCart(newCart);
   }, [count, curOption]);
-
-  useEffect(() => {
-    const updateDatabase = async newCart => {
-      try {
-        await updateCart(newCart);
-      } catch (error) {
-        console.log(error);
-      }
-    };
-    return () => {
-      updateDatabase(cart);
-    };
-  });
 
   const handleChange = (value: string) => {
     //카트에 담겨있는 아이템과 아이디와 옵션이 똑같은 아이템이
@@ -63,8 +49,11 @@ function CartCard({product, cart_info}: CardProps) {
 
   const removeItem = () => {
     if (confirm('해당 상품을 장바구니에서 삭제하시겠습니까?')) {
-      const newCart = changeJson(cart.cart_list).filter(obj => obj.id != product.product_id && obj.option != curOption);
-      console.log(newCart);
+      const newCartList = changeJson(cart.cart_list).filter(
+        obj => obj.id != product.product_id || (obj.id == product.product_id && obj.option != curOption),
+      );
+      const newCart = {...cart, cart_list: newCartList};
+      setCart(newCart);
     }
   };
 
@@ -121,6 +110,7 @@ function CartCard({product, cart_info}: CardProps) {
             ).replaceAll(',', ''),
           ) * Number(count),
         )}
+        <button onClick={removeItem}>삭제하기</button>
       </div>
     </div>
   );
