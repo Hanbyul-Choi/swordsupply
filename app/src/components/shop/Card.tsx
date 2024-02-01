@@ -27,7 +27,7 @@ function Card({product}: {product: Tables<'products'>}) {
   };
 
   const putInCart = () => {
-    if (isAlreadyCart(changeJson(cart.cart_list), product.product_id, curOption)) {
+    if (isAlreadyCart(changeJson(cart?.cart_list), product.product_id, curOption)) {
       alert('이미 카트에 담겨있습니다.');
       return;
     }

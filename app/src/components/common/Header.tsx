@@ -45,6 +45,7 @@ function Header() {
     await supabase.auth.signOut();
     storeSignOut();
     alert('로그아웃 되었습니다.');
+    setCart(null);
     router.push('/');
   };
 
@@ -52,7 +53,6 @@ function Header() {
     supabase.auth.getSession().then(async ({data: {session}}) => {
       if (session) {
         const {email, id: user_id} = session.user;
-
         const userData = await getUser(user_id);
         if (!userData) {
           const newUser = {
@@ -63,13 +63,12 @@ function Header() {
           setSession(await getUser(user_id));
         }
         setSession(userData);
-        if (user_id) {
-          const user_cart = await getCart(user_id);
-          if (!user_cart) {
-            await postCart({user_id});
-          }
-          setCart(user_cart);
+        const user_cart = await getCart(user_id);
+        if (!user_cart) {
+          await postCart({user_id});
+          setCart(await getCart(user_id));
         }
+        setCart(user_cart);
       } else if (session === null) {
         setSession(null);
       }
@@ -145,7 +144,7 @@ function Header() {
             <BsCart4 size={25} />
             {session && cart && (
               <div className="bg-red-600 w-6 h-6 rounded-full text-center absolute -top-2 -right-3">
-                <span className="text-white">{cart?.cart_list.length}</span>
+                <span className="text-white">{cart?.cart_list?.length}</span>
               </div>
             )}
           </Link>
