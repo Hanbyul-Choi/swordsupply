@@ -47,7 +47,7 @@ function Card({product}: {product: Tables<'products'>}) {
       <Link
         href={`/shop/detail/${product.product_id}?brand=${product.brand}`}
         className="flex flex-col items-center gap-2">
-        <div className="w-60 h-60 relative">
+        <div className="w-52 h-52 relative">
           <Image src={product.thumbnail ?? ''} alt="" fill sizes="100" style={{objectFit: 'cover'}} />
         </div>
         <p className="border-b-[1px] pb-1 w-full text-center">{product.product_name}</p>
@@ -59,11 +59,11 @@ function Card({product}: {product: Tables<'products'>}) {
         />
       </Link>
 
-      <div className="flex gap-2 w-full">
+      <div className="flex gap-2 w-full h-8">
         {product.options?.length !== 0 && product.options && (
           <Select
             defaultValue={defaulteOption?.option_name}
-            style={{width: '100%', textAlign: 'center'}}
+            style={{width: '100%', height: '2rem', textAlign: 'center'}}
             onChange={handleChange}
             options={product.options?.map(option => {
               const newOpt = option as Option;

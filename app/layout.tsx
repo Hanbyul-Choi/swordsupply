@@ -1,7 +1,11 @@
+import {Suspense} from 'react';
+
 import {Anton, Roboto} from 'next/font/google';
 import localFont from 'next/font/local';
 
+import {Footer} from './src/components/common/Footer';
 import Header from './src/components/common/Header';
+import Loading from './src/components/loading/Loading';
 import Providers from './src/utils/provider';
 
 import type {Metadata} from 'next';
@@ -27,10 +31,13 @@ const roboto = Roboto({subsets: ['latin'], display: 'swap', weight: '400', varia
 export default function RootLayout({children}: {children: React.ReactNode}) {
   return (
     <html lang="ko">
-      <body className={`${myFont.className} ${anton.variable} ${roboto.variable}`}>
+      <body className={`${myFont.className} ${anton.variable} ${roboto.variable} flex flex-col min-h-screen`}>
         <Providers>
           <Header />
-          <div className="w-full mx-auto mt-[147px] min-h-[72vh]">{children}</div>
+          <Suspense fallback={<Loading lodingText="로딩 중" />}>
+            <div className="w-full h-screen mx-auto flex-1 mb-32">{children}</div>
+          </Suspense>
+          <Footer />
         </Providers>
       </body>
     </html>

@@ -6,7 +6,7 @@ import MainBanner from './src/components/main-page/MainBanner';
 export const revalidate = 0;
 export default function Home() {
   return (
-    <main className="flex flex-col justify-center gap-10">
+    <main className="flex flex-col justify-center items-center gap-10 w-full">
       <MainBanner />
       <BestSeller />
       <GuideBanner />

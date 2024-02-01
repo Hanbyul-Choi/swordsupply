@@ -60,11 +60,11 @@ function Page() {
   }, [brands, isLoaded]);
 
   if (!productData) {
-    return <BarLoader color="#36d7b7" />;
+    return <BarLoader color="#36d7b7 min-h-screen" />;
   }
   return (
     <div className="bg-[#ecf0f4]">
-      <div className="max-w-[1280px] min-h-full flex flex-col justify-center items-center mx-auto p-4">
+      <div className="max-w-[1280px] flex flex-col justify-center items-center mx-auto p-4">
         {defaultBrand && session?.role === 'admin' ? (
           <>
             <h3 className="text-3xl w-fit my-10">상품 관리</h3>
@@ -106,7 +106,6 @@ function Page() {
           <div className="text-center text-2xl">잘못된 접근입니다.</div>
         )}
       </div>
-      <div className="bg-[#ecf0f4] h-[146.5px]" />
     </div>
   );
 }
