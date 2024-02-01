@@ -7,17 +7,17 @@
 }
 
 :root {
-  font-size: 11px;
+  font-size: 12px;
 
-  @media screen and (min-width: 600px) {
+  @media screen and (min-width: 380px) {
     font-size: 13px;
   }
 
-  @media screen and (min-width: 800px) {
+  @media screen and (min-width: 768px) {
     font-size: 14px;
   }
 
-  @media screen and (min-width: 1000px) {
+  @media screen and (min-width: 1024px) {
     font-size: 15px;
   }
 }
@@ -31,4 +31,18 @@ input::-webkit-inner-spin-button {
 /* Firefox  */
 input[type='number'] {
   -moz-appearance: textfield;
+}
+
+.ant-select-selection-item {
+  font-size: 1rem;
+}
+/* .ant-select-selector {
+  border-radius: 4rem;
+}
+.ant-selector {
+  border-radius: 4rem;
+} */
+.ant-select-item-option-content {
+  font-size: 1rem;
+  text-align: center;
 }

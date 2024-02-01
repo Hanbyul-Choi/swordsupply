@@ -72,55 +72,56 @@ function CartCard({product, cart_info}: CardProps) {
     return;
   }
   return (
-    <div className="flex justify-center w-full p-4 bg-gray-400">
-      <div>
-        <div className="w-40 h-40 relative">
+    <div className="flex justify-between items-center w-full p-4 bg-gray-400">
+      <div className="flex items-center ">
+        <div className="w-20 relative mr-8" style={{aspectRatio: '1/1'}}>
           <Image src={product.thumbnail ?? ''} alt="" fill sizes="100" style={{objectFit: 'cover'}} />
         </div>
-        <p className="border-b-[1px] pb-1 w-full text-center">{product.product_name}</p>
-        <PriceSection
-          event_price={product.event_price}
-          origin_price={product.origin_price}
-          options={product.options as Option[]}
-          cur_option={curOption}
-        />
-      </div>
-      <h1>{count}</h1>
-      <h1>{curOption}</h1>
-      <div className="flex gap-2 w-full">
-        {product.options?.length !== 0 && product.options && (
-          <div className="w-48">
-            <Select
-              value={curOption}
-              style={{width: '100%', textAlign: 'center'}}
-              onChange={handleChange}
-              options={product.options?.map(option => {
-                const newOpt = option as Option;
-                return {value: newOpt.option_name, label: newOpt.option_name, filterOption: 'a'};
-              })}
-            />
-          </div>
-        )}
         <div>
-          <CountControl
-            count={count}
-            onChangeCount={onChangeCount}
-            onClickMinus={onClickMinus}
-            onClickPlus={onClickPlus}
+          <p className="">{product.product_name}</p>
+          <PriceSection
+            event_price={product.event_price}
+            origin_price={product.origin_price}
+            options={product.options as Option[]}
+            cur_option={curOption}
           />
         </div>
       </div>
-      {addCommas(
-        Number(
-          (
-            product.event_price ||
-            product.origin_price ||
-            findPrice('event_price', curOption, product.options as Option[]) ||
-            findPrice('origin_price', curOption, product.options as Option[])
-          ).replaceAll(',', ''),
-        ) * Number(count),
-      )}
-      <button onClick={removeItem}>삭제하기</button>
+      <div className="flex items-center">
+        <div className="gap-2 w-full flex mr-2.5">
+          {product.options?.length !== 0 && product.options && (
+            <div className="w-48">
+              <Select
+                value={curOption}
+                style={{width: '100%', textAlign: 'center'}}
+                onChange={handleChange}
+                options={product.options?.map(option => {
+                  const newOpt = option as Option;
+                  return {value: newOpt.option_name, label: newOpt.option_name, filterOption: 'a'};
+                })}
+              />
+            </div>
+          )}
+          <div>
+            <CountControl
+              count={count}
+              onChangeCount={onChangeCount}
+              onClickMinus={onClickMinus}
+              onClickPlus={onClickPlus}
+            />
+          </div>
+        </div>
+        {addCommas(
+          Number(
+            (
+              product.event_price ||
+              product.origin_price ||
+              findPrice('event_price', curOption, product.options as Option[]) ||
+              findPrice('origin_price', curOption, product.options as Option[])
+            ).replaceAll(',', ''),
+          ) * Number(count),
+        )}
+      </div>
     </div>
   );
 }

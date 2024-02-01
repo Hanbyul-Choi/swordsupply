@@ -1,5 +1,5 @@
 'use client';
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 
 import {Dropdown} from 'antd';
 import Link from 'next/link';
@@ -40,6 +40,23 @@ function Header() {
   const {cart, setCart} = useCartStore();
   const curPath = usePathname();
   const router = useRouter();
+  const [position, setPosition] = useState(curPath === '/' ? 0 : 100);
+
+  useEffect(() => {
+    function onScroll() {
+      if (curPath === '/') setPosition(window.scrollY);
+    }
+    if (curPath === '/') {
+      window.addEventListener('scroll', onScroll);
+      setPosition(0);
+    }
+    return () => {
+      if (curPath === '/') {
+        window.removeEventListener('scroll', onScroll);
+      }
+      setPosition(100);
+    };
+  }, [curPath]);
 
   const signOut = async () => {
     await supabase.auth.signOut();
@@ -75,27 +92,6 @@ function Header() {
     });
   }, []);
 
-  // useEffect(() => {
-  //   supabase.auth.onAuthStateChange(async (event, session) => {
-  //     if (session) {
-  //       const {email, id: user_id} = session.user;
-
-  //       const userData = await getUser(user_id);
-  //       if (!userData) {
-  //         const newUser = {
-  //           user_id,
-  //           email,
-  //         };
-  //         await setUserData(newUser);
-  //         setSession(await getUser(user_id));
-  //       }
-  //       setSession(userData);
-  //     } else if (session === null) {
-  //       setSession(null);
-  //     }
-  //   });
-  // }, []);
-
   const items: MenuProps['items'] =
     session?.role !== 'admin'
       ? [
@@ -124,24 +120,29 @@ function Header() {
         ];
 
   return (
-    <div className="fixed left-0 top-0 w-full pt-8 px-10 flex flex-col justify-center gap-4 bg-white z-10 shadow-[0_1px_4px_0_rgba(53,60,73,0.08)]">
-      <div className="flex justify-between items-center mb-4">
-        <div className="w-32" />
+    <div
+      className={`sticky left-0 top-0 w-full pt-8 flex flex-col justify-center gap-4 z-10 ${
+        position < 70 ? 'bg-transparent' : 'bg-white  shadow-[1px_2px_4px_0_rgba(53,60,73,0.4)] '
+      } `}>
+      <div className="flex justify-between items-center mb-4 px-4 sm:px-10">
+        <div className="w-28 sm:w-32 h-8" />
         <Link className="text-4xl font-anton" href={'/'}>
           SWORDSUPPLY
         </Link>
-        <div className="flex gap-10 w-32">
+        <div className="flex gap-3 sm:gap-10 w-32 justify-center">
           {isLoaded && session ? (
-            <Dropdown menu={{items}}>
+            <Dropdown menu={{items}} className="cursor-pointer">
               <a onClick={e => e.preventDefault()}>
-                <FaUser size={25} />
+                <FaUser size={18} className={`sm:hidden`} />
+                <FaUser size={25} className={`max-sm:hidden `} />
               </a>
             </Dropdown>
           ) : (
             <LoginModal />
           )}
           <Link href={'/cart'} className="relative">
-            <BsCart4 size={25} />
+            <BsCart4 size={18} className={`sm:hidden `} />
+            <BsCart4 size={25} className={`max-sm:hidden `} />
             {session && cart && (
               <div className="bg-red-600 w-6 h-6 rounded-full text-center absolute -top-2 -right-3">
                 <span className="text-white">{cart?.cart_list?.length}</span>
@@ -150,13 +151,16 @@ function Header() {
           </Link>
         </div>
       </div>
-      <nav className="flex gap-8 justify-center">
+      <nav
+        className={`flex gap-8 justify-center text-white bg-[#2a2a2a] ${
+          position < 70 ? 'bg-transparent' : 'bg-[#2a2a2a] '
+        }`}>
         {navMenuItems.map(item => (
           <Link
             href={item.path}
             key={item.name}
-            className={`${item.font} p-2 border-b-[3px]  hover:border-black ${
-              curPath === item.path ? 'border-b-[3px] border-black' : 'border-transparent'
+            className={`${item.font} p-4 border-b-4  hover:border-[#e5e7eb] ${
+              curPath === item.path ? 'border-[#e5e7eb] ' : 'border-transparent '
             }`}>
             {item.name}
           </Link>

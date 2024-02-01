@@ -76,7 +76,7 @@ function Page({params: {id}, searchParams: {brand}}: {params: {id: string}; sear
       break;
   }
   return (
-    <div className="mt-52 max-w-[1080px] mx-auto flex flex-col items-center p-8">
+    <div className="mt-4 max-w-[1080px] mx-auto flex flex-col items-center p-8">
       <div className="w-full mb-12">
         <Breadcrumb
           items={[
@@ -140,10 +140,10 @@ function Page({params: {id}, searchParams: {brand}}: {params: {id: string}; sear
             {detailData.options?.length !== 0 && (
               <>
                 <p className="w-full border-b-2 pb-2">사이즈</p>
-                <div className="w-1/3 mt-2">
+                <div className="w-1/4 mt-2">
                   <Select
                     defaultValue={defaulteOption?.option_name}
-                    style={{width: '100%', textAlign: 'center'}}
+                    style={{width: '100%', height: '2rem', textAlign: 'center'}}
                     onChange={handleChange}
                     options={detailData.options?.map(option => {
                       const newOpt = option as Option;
@@ -155,7 +155,7 @@ function Page({params: {id}, searchParams: {brand}}: {params: {id: string}; sear
             )}
             <p className="w-full border-b-2 pb-2 mt-4 ">수량</p>
             <div className="w-full mt-2 flex justify-between items-center">
-              <div className="w-1/3 bg-white">
+              <div className="w-1/4 bg-white">
                 <CountControl
                   count={count}
                   onChangeCount={onChangeCount}

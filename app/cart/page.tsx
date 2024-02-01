@@ -55,9 +55,9 @@ function Page() {
   }, [products, cart]);
 
   return (
-    <div className="flex flex-col items-center mx-auto max-w-[1080px] p-8 gap-3">
-      <h1>쇼핑카트</h1>
-      <div className="flex flex-col w-2/3 gap-2">
+    <div className="flex flex-col mx-auto max-w-[1080px] p-8 gap-3">
+      <h2>쇼핑카트</h2>
+      <div className="flex flex-col w-full gap-2">
         {cart?.cart_list?.map((item, i) => (
           <CartCard
             product={products.find(obj => obj.product_id == changeJson(item).id)}
