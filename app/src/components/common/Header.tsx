@@ -88,6 +88,7 @@ function Header() {
         setSession(null);
       }
     });
+    console.log('z');
   }, []);
 
   const items: MenuProps['items'] =
