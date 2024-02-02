@@ -42,7 +42,7 @@ function SignForm({signType}: ISignForm) {
         )}
         <p className="text-red-500 text-sm">{error || ''}</p>
 
-        <button type="submit" className="border-[1px] rounded-md p-2 w-full bg-blue text-white hover:opacity-70">
+        <button type="submit" className="border-[1px] rounded-md p-2 w-full bg-black text-white hover:opacity-70">
           {signType === 'SignIn' ? 'Login' : '회원가입'}
         </button>
       </form>

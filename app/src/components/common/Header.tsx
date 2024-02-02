@@ -122,11 +122,11 @@ function Header() {
   return (
     <div
       className={`sticky left-0 top-0 w-full pt-8 flex flex-col justify-center gap-4 z-10 ${
-        position < 70 ? 'bg-transparent' : 'bg-white  shadow-[1px_2px_4px_0_rgba(53,60,73,0.4)] '
+        position < 70 ? 'bg-[#FFFFFF4c]' : 'bg-white  shadow-[1px_2px_4px_0_rgba(53,60,73,0.4)] '
       } `}>
       <div className="flex justify-between items-center mb-4 px-4 sm:px-10">
         <div className="w-28 sm:w-32 h-8" />
-        <Link className="text-4xl font-anton" href={'/'}>
+        <Link className={`text-5xl font-anton text-black`} href={'/'}>
           SWORDSUPPLY
         </Link>
         <div className="flex gap-3 sm:gap-10 w-32 justify-center">
@@ -134,15 +134,15 @@ function Header() {
             <Dropdown menu={{items}} className="cursor-pointer">
               <a onClick={e => e.preventDefault()}>
                 <FaUser size={18} className={`sm:hidden`} />
-                <FaUser size={25} className={`max-sm:hidden `} />
+                <FaUser size={25} className={`max-sm:hidden`} />
               </a>
             </Dropdown>
           ) : (
             <LoginModal />
           )}
           <Link href={'/cart'} className="relative">
-            <BsCart4 size={18} className={`sm:hidden `} />
-            <BsCart4 size={25} className={`max-sm:hidden `} />
+            <BsCart4 size={18} className={`sm:hidden`} />
+            <BsCart4 size={25} className={`max-sm:hidden`} />
             {session && cart && (
               <div className="bg-red-600 w-6 h-6 rounded-full text-center absolute -top-2 -right-3">
                 <span className="text-white">{cart?.cart_list?.length}</span>
@@ -152,8 +152,8 @@ function Header() {
         </div>
       </div>
       <nav
-        className={`flex gap-8 justify-center text-white bg-[#2a2a2a] ${
-          position < 70 ? 'bg-transparent' : 'bg-[#2a2a2a] '
+        className={`flex gap-8 justify-center bg-[#2a2a2a] ${
+          position < 70 ? 'bg-transparent' : 'bg-[#2a2a2a] text-white'
         }`}>
         {navMenuItems.map(item => (
           <Link

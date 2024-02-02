@@ -14,9 +14,8 @@ export const apiSignUp = async ({email, password}: IApiSignUp) => {
   });
   if (error) {
     console.log(error);
-    return;
   }
-  return data;
+  return {data, error};
 };
 
 export const apiSignIn = async ({email, password}: IApiSignUp) => {
@@ -26,9 +25,8 @@ export const apiSignIn = async ({email, password}: IApiSignUp) => {
   });
   if (error) {
     console.log(error);
-    return;
   }
-  return data;
+  return {data, error};
 };
 
 export const setUserData = async (userData: TablesInsert<'users'>) => {

@@ -7,8 +7,9 @@ import {useModal} from '../overlay/modal/useModal';
 
 import type {TablesInsert} from '@/app/types/supabase';
 
-export default function useSign(SignType: 'SignIn' | 'SignUp') {
-  const oppositeSignType = SignType === 'SignIn' ? 'SignUp' : 'SignIn';
+export default function useSign(SignTypeDefault: 'SignIn' | 'SignUp') {
+  const oppositeSignType = SignTypeDefault === 'SignIn' ? 'SignUp' : 'SignIn';
+  const [signType, setSignType] = useState(SignTypeDefault);
   const {unmount} = useModal();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -26,39 +27,70 @@ export default function useSign(SignType: 'SignIn' | 'SignUp') {
     setPasswordConfirm(e.target.value);
   };
 
+  const resetInput = () => {
+    setPassword('');
+    setPasswordConfirm('');
+  };
+
   useEffect(() => {
-    if (passwordConfirm === '') return;
-    if (password !== passwordConfirm) {
-      return setError('비밀번호가 일치하지 않습니다.');
+    if (passwordConfirm) {
+      if (password !== passwordConfirm) {
+        return setError('비밀번호가 일치하지 않습니다.');
+      }
     }
     setError(null);
   }, [password, passwordConfirm]);
 
   const onSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    if (password.replaceAll(' ', '') === '') return setError('비밀번호를 입력하세요');
     if (email.replaceAll(' ', '') === '') return;
-    if (SignType === 'SignUp') {
-      SignUp(email, password);
-    } else if (SignType === 'SignIn') {
-      SignIn(email, password);
+
+    console.log(signType);
+
+    if (signType === 'SignUp') {
+      if (passwordConfirm.replaceAll(' ', '') === '') return setError('비밀번호를 입력하세요');
+      const error = await SignUp(email, password);
+      if (error) {
+        if (error.message === 'User already registered') {
+          resetInput();
+          alert('이미 가입된 계정입니다.');
+        } else {
+          resetInput();
+          alert('오류가 발생했습니다. 잠시 후 다시 시도해주세요.');
+        }
+        return;
+      }
+      return setSignType('SignIn');
+    } else if (signType === 'SignIn') {
+      const error = await SignIn(email, password);
+      if (error) {
+        resetInput();
+        alert('이메일 혹은 비밀번호를 확인해주세요');
+        return;
+      }
+      unmount('AuthModal');
     }
     setEmail('');
     setPassword('');
     setPasswordConfirm('');
-
-    unmount('AuthModal');
   };
 
   const SignUp = async (email: string, password: string) => {
-    const data = await apiSignUp({email, password});
+    const {data, error} = await apiSignUp({email, password});
+    if (error) {
+      return error;
+    }
     if (data) {
       alert('회원가입이 완료되었습니다.');
     }
   };
 
   const SignIn = async (email: string, password: string) => {
-    const data = await apiSignIn({email, password});
-
+    const {data, error} = await apiSignIn({email, password});
+    if (error) {
+      return error;
+    }
     if (data) {
       const user_id = data.session.user.id;
       const userData = await getUser(user_id);

@@ -55,7 +55,7 @@ function CartCard({product, cart_info, removeItem}: CardProps) {
     <div className="relative flex justify-between items-center w-full p-4 bg-white">
       <button
         onClick={() => removeItem(cart_info.id, cart_info.option)}
-        className="absolute top-2 right-4 border-[1px] border-red-500 px-2 text-red-500">
+        className="absolute top-2 right-2 border-[1px] border-red-500 px-2 text-red-500">
         삭제
       </button>
       <div className="flex items-center">
