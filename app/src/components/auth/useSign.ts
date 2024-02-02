@@ -3,13 +3,14 @@ import {useEffect, useState} from 'react';
 import {apiSignIn, apiSignUp, getUser, setUserData} from '@/app/src/api/auth';
 import useSessionStore from '@/app/src/store/session.store';
 
+import {postCart} from '../../api/cart';
 import {useModal} from '../overlay/modal/useModal';
 
 import type {TablesInsert} from '@/app/types/supabase';
 
-export default function useSign(SignTypeDefault: 'SignIn' | 'SignUp') {
-  const oppositeSignType = SignTypeDefault === 'SignIn' ? 'SignUp' : 'SignIn';
-  const [signType, setSignType] = useState(SignTypeDefault);
+export default function useSign(signType: 'SignIn' | 'SignUp') {
+  const oppositeSignType = signType === 'SignIn' ? 'SignUp' : 'SignIn';
+  // const [signType, setSignType] = useState(SignTypeDefault);
   const {unmount} = useModal();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -45,9 +46,6 @@ export default function useSign(SignTypeDefault: 'SignIn' | 'SignUp') {
     event.preventDefault();
     if (password.replaceAll(' ', '') === '') return setError('비밀번호를 입력하세요');
     if (email.replaceAll(' ', '') === '') return;
-
-    console.log(signType);
-
     if (signType === 'SignUp') {
       if (passwordConfirm.replaceAll(' ', '') === '') return setError('비밀번호를 입력하세요');
       const error = await SignUp(email, password);
@@ -61,7 +59,7 @@ export default function useSign(SignTypeDefault: 'SignIn' | 'SignUp') {
         }
         return;
       }
-      return setSignType('SignIn');
+      return;
     } else if (signType === 'SignIn') {
       const error = await SignIn(email, password);
       if (error) {
@@ -82,6 +80,9 @@ export default function useSign(SignTypeDefault: 'SignIn' | 'SignUp') {
       return error;
     }
     if (data) {
+      const {id: user_id} = data.user;
+      await setUserData({user_id});
+      await postCart({user_id});
       alert('회원가입이 완료되었습니다.');
     }
   };

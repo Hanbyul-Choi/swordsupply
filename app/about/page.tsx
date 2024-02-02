@@ -1,7 +1,7 @@
 import React from 'react';
 
 function Page() {
-  return <div>우리가 누구인가</div>;
+  return <div>About us</div>;
 }
 
 export default Page;

@@ -4,22 +4,26 @@ import React, {useCallback, useEffect, useState} from 'react';
 import Link from 'next/link';
 import {BarLoader} from 'react-spinners';
 
-import {updateCart} from '../src/api/cart';
+import {getCart, updateCart} from '../src/api/cart';
 import {getCartProducts} from '../src/api/products';
 import CartCard from '../src/components/cart/cartCard';
+import Order from '../src/components/cart/order';
 import useCartStore from '../src/store/carts.store';
+import useSessionStore from '../src/store/session.store';
 import {addCommas, changeJson} from '../src/utils/common';
 
 export type idsI = {id: string; count: string; option: string | null};
 
 function Page() {
+  const {session} = useSessionStore();
   const {cart, setCart} = useCartStore();
   const [products, setProducts] = useState([]);
   const [totalPrice, setTotalPrice] = useState(0);
   const [totalCount, setTotalCount] = useState(0);
-
+  const [isOrder] = useState(false);
   const fetchData = useCallback(async () => {
     if (cart && cart.cart_list.length > 0 && products.length === 0) {
+      console.log('a');
       const ids = cart.cart_list.map((product: idsI) => product.id);
       if (ids.length > 0) {
         const productData = await getCartProducts(ids);
@@ -30,6 +34,18 @@ function Page() {
       updateCart(cart);
     }
   }, [cart, products]);
+
+  useEffect(() => {
+    const fetchCart = async id => {
+      const {data} = await getCart(id);
+      if (data) {
+        setCart(data);
+      }
+    };
+    if (!cart && session) {
+      fetchCart(session.user_id);
+    }
+  });
 
   useEffect(() => {
     fetchData();
@@ -139,9 +155,10 @@ function Page() {
           </div>
         </div>
       </div>
-      <Link href={'/order'} className="mx-auto bg-black text-white text-xl p-2 px-8 hover:opacity-75">
-        주문하기
-      </Link>
+      {isOrder && <Order />}
+      <button className="mx-auto bg-black text-white text-xl p-2 px-8 hover:opacity-75">
+        {isOrder ? '취소하기' : '주문하기'}
+      </button>
     </div>
   );
 }
