@@ -7,6 +7,7 @@ import {BarLoader} from 'react-spinners';
 import {updateCart} from '../src/api/cart';
 import {getCartProducts} from '../src/api/products';
 import CartCard from '../src/components/cart/cartCard';
+import Order from '../src/components/cart/order';
 import useCartStore from '../src/store/carts.store';
 import {addCommas, changeJson} from '../src/utils/common';
 
@@ -17,7 +18,7 @@ function Page() {
   const [products, setProducts] = useState([]);
   const [totalPrice, setTotalPrice] = useState(0);
   const [totalCount, setTotalCount] = useState(0);
-
+  const [isOrder, setIsOrder] = useState(false);
   useEffect(() => {
     const fetchData = async () => {
       if (cart && cart.cart_list.length > 0 && products.length === 0) {
@@ -63,7 +64,14 @@ function Page() {
       setTotalCount(() => updateTotalCount);
     }
   }, [products, cart]);
-
+  const clickOrder = () => {
+    if (cart.cart_list.length == 0) {
+      alert('장바구니에 담긴 상품이 없습니다!');
+      return;
+    } else {
+      setIsOrder(prev => !prev);
+    }
+  };
   if (cart?.cart_list?.length === 0) {
     return (
       <div className="w-full flex flex-col items-center justify-center mt-24 gap-12">
@@ -116,9 +124,10 @@ function Page() {
           </div>
         </div>
       </div>
-      <Link href={'/order'} className="mx-auto bg-black text-white text-xl p-2 px-8 hover:opacity-75">
-        주문하기
-      </Link>
+      {isOrder && <Order />}
+      <button onClick={clickOrder} className="mx-auto bg-black text-white text-xl p-2 px-8 hover:opacity-75">
+        {isOrder ? '취소하기' : '주문하기'}
+      </button>
     </div>
   );
 }
