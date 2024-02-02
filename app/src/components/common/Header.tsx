@@ -12,7 +12,7 @@ import useSessionStore from '@/app/src/store/session.store';
 import {supabase} from '@/supabase/supabase.config';
 
 import {getUser, setUserData} from '../../api/auth';
-import {getCart, postCart} from '../../api/cart';
+import {getCart} from '../../api/cart';
 import LoginModal from '../LoginModal';
 
 import type {MenuProps} from 'antd';
@@ -80,12 +80,10 @@ function Header() {
           setSession(await getUser(user_id));
         }
         setSession(userData);
-        const user_cart = await getCart(user_id);
-        if (!user_cart) {
-          await postCart({user_id});
-          setCart(await getCart(user_id));
+        const {data: user_cart, error} = await getCart(user_id);
+        if (user_cart && !error) {
+          setCart(user_cart);
         }
-        setCart(user_cart);
       } else if (session === null) {
         setSession(null);
       }
@@ -116,6 +114,10 @@ function Header() {
           {
             label: <Link href="/admin">상품관리</Link>,
             key: '2',
+          },
+          {
+            label: <Link href="/admin/order">고객주문 확인</Link>,
+            key: '3',
           },
         ];
 
