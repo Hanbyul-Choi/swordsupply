@@ -20,7 +20,7 @@ function Page() {
   const [products, setProducts] = useState([]);
   const [totalPrice, setTotalPrice] = useState(0);
   const [totalCount, setTotalCount] = useState(0);
-  const [isOrder, setIsOrder] = useState(false);
+  const [isOrder] = useState(false);
   const fetchData = useCallback(async () => {
     if (cart && cart.cart_list.length > 0 && products.length === 0) {
       console.log('a');
