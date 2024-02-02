@@ -17,13 +17,14 @@ import type {Tables} from '@/app/types/supabase';
 interface CardProps {
   product: Tables<'products'>;
   cart_info: idsI;
+  removeItem: (cart_id: string, option: string) => void;
 }
 
-function CartCard({product, cart_info}: CardProps) {
+function CartCard({product, cart_info, removeItem}: CardProps) {
   const {count, onChangeCount, onClickMinus, onClickPlus, resetCount} = useCountControl(cart_info?.count);
   const [curOption, setCurOption] = useState<null | string>(cart_info?.option);
   const {cart, setCart} = useCartStore();
-  console.log(curOption);
+
   useEffect(() => {
     const originCartList = changeJson([...cart.cart_list]); // [{id:a, count:1},{id:b, count:2}]
     originCartList.map(obj => {
@@ -47,21 +48,16 @@ function CartCard({product, cart_info}: CardProps) {
     resetCount();
   };
 
-  const removeItem = () => {
-    if (confirm('해당 상품을 장바구니에서 삭제하시겠습니까?')) {
-      const newCartList = changeJson(cart.cart_list).filter(
-        obj => obj.id != product.product_id || (obj.id == product.product_id && obj.option != curOption),
-      );
-      const newCart = {...cart, cart_list: newCartList};
-      setCart(newCart);
-    }
-  };
-
   if (!product) {
     return;
   }
   return (
-    <div className="flex justify-between items-center w-full p-4 bg-white">
+    <div className="relative flex justify-between items-center w-full p-4 bg-white">
+      <button
+        onClick={() => removeItem(cart_info.id, cart_info.option)}
+        className="absolute top-2 right-2 border-[1px] border-red-500 px-2 text-red-500">
+        삭제
+      </button>
       <div className="flex items-center">
         <div className="w-20 relative mr-8" style={{aspectRatio: '1/1'}}>
           <Image src={product.thumbnail ?? ''} alt="" fill sizes="100" style={{objectFit: 'cover'}} />
@@ -79,7 +75,7 @@ function CartCard({product, cart_info}: CardProps) {
       <div className="flex items-center">
         <div className="gap-2 w-full flex mr-2.5">
           {product.options?.length !== 0 && product.options && (
-            <div className="w-48">
+            <div className="min-w-24">
               <Select
                 value={curOption}
                 style={{width: '100%', textAlign: 'center'}}

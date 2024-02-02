@@ -1,5 +1,5 @@
 'use client';
-import React, {useEffect, useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 
 import Link from 'next/link';
 import {BarLoader} from 'react-spinners';
@@ -14,43 +14,41 @@ import {addCommas, changeJson} from '../src/utils/common';
 export type idsI = {id: string; count: string; option: string | null};
 
 function Page() {
-  const {cart} = useCartStore();
+  const {cart, setCart} = useCartStore();
   const [products, setProducts] = useState([]);
   const [totalPrice, setTotalPrice] = useState(0);
   const [totalCount, setTotalCount] = useState(0);
   const [isOrder, setIsOrder] = useState(false);
-  useEffect(() => {
-    const fetchData = async () => {
-      if (cart && cart.cart_list.length > 0 && products.length === 0) {
-        const ids = cart.cart_list.map((product: idsI) => product.id);
-        if (ids.length > 0) {
-          const productData = await getCartProducts(ids);
-          setProducts([...products, ...productData]);
-        }
+  const fetchData = useCallback(async () => {
+    if (cart && cart.cart_list.length > 0 && products.length === 0) {
+      const ids = cart.cart_list.map((product: idsI) => product.id);
+      if (ids.length > 0) {
+        const productData = await getCartProducts(ids);
+        setProducts(prevProducts => [...prevProducts, ...productData]);
       }
-      if (cart) {
-        updateCart(cart);
-      }
-    };
-    fetchData();
-  }, [cart]);
+    }
+    if (cart) {
+      updateCart(cart);
+    }
+  }, [cart, products]);
 
   useEffect(() => {
+    fetchData();
+  }, [fetchData]);
+
+  const updateTotals = useCallback(() => {
     let updateTotalPrice = 0;
     let updateTotalCount = 0;
 
-    if (cart && products.length != 0) {
+    if (cart && products.length !== 0) {
       changeJson(cart.cart_list)?.forEach(item => {
-        // 현재 item에 대한 product의 옵션들
-        let targetProduct = products.find(obj => obj.product_id == item.id);
-        // 현재 item에 대한 product 정보
-        let options = targetProduct?.options;
-        // 현재 item에 대한 product 옵션
-        let targetOption = options?.find(a => a.option_name == item.option);
-        let realPrice = targetOption?.event_price
+        const targetProduct = products.find(obj => obj.product_id === item.id);
+        const options = targetProduct?.options;
+        const targetOption = options?.find(a => a.option_name === item.option);
+        const realPrice = targetOption?.event_price
           ? targetOption?.event_price.replaceAll(',', '')
           : targetOption?.origin_price.replaceAll(',', '');
-        let total =
+        const total =
           Number(
             targetProduct?.event_price.replaceAll(',', '') ||
               targetProduct?.origin_price.replaceAll(',', '') ||
@@ -58,20 +56,37 @@ function Page() {
               0,
           ) * Number(item.count);
         updateTotalPrice += total;
-        updateTotalCount += item.count;
+        updateTotalCount += Number(item.count);
       });
-      setTotalPrice(() => updateTotalPrice);
-      setTotalCount(() => updateTotalCount);
+      setTotalPrice(updateTotalPrice);
+      setTotalCount(updateTotalCount);
     }
-  }, [products, cart]);
-  const clickOrder = () => {
-    if (cart.cart_list.length == 0) {
-      alert('장바구니에 담긴 상품이 없습니다!');
-      return;
-    } else {
-      setIsOrder(prev => !prev);
-    }
-  };
+  }, [cart, products]);
+
+  useEffect(() => {
+    updateTotals();
+  }, [updateTotals]);
+
+  const removeItem = useCallback(
+    (cart_id: string, option: string) => {
+      if (window.confirm('해당 상품을 장바구니에서 삭제하시겠습니까?')) {
+        const newCartList = changeJson(cart.cart_list).filter(obj => {
+          if (obj.id === cart_id) {
+            if (!option || option === obj.option) {
+              // TODO: 같은 상품의 다른옵션이 있을 경우 데이터는 정상적으로 삭제되나 다른 상품이 삭제됨
+              window.location.reload();
+              return false;
+            }
+          }
+          return true;
+        });
+        const newCart = {...cart, cart_list: newCartList};
+        setCart(newCart);
+      }
+    },
+    [cart, setCart],
+  );
+
   if (cart?.cart_list?.length === 0) {
     return (
       <div className="w-full flex flex-col items-center justify-center mt-24 gap-12">
@@ -99,9 +114,10 @@ function Page() {
       <div className="flex flex-col w-full gap-1 bg-[#ecf0f4] p-2">
         {cart?.cart_list?.map((item, i) => (
           <CartCard
-            product={products.find(obj => obj.product_id == changeJson(item).id)}
+            key={i}
+            product={products.find(obj => obj.product_id === changeJson(item).id)}
             cart_info={changeJson(item)}
-            key={changeJson(item).id + i}
+            removeItem={removeItem}
           />
         ))}
       </div>
@@ -125,7 +141,7 @@ function Page() {
         </div>
       </div>
       {isOrder && <Order />}
-      <button onClick={clickOrder} className="mx-auto bg-black text-white text-xl p-2 px-8 hover:opacity-75">
+      <button className="mx-auto bg-black text-white text-xl p-2 px-8 hover:opacity-75">
         {isOrder ? '취소하기' : '주문하기'}
       </button>
     </div>

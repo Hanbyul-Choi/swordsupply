@@ -33,3 +33,21 @@ export const updateCart = async (newCarts: TablesInsert<'carts'>) => {
 };
 
 export const orderCart = async () => {};
+
+export const getOrderList = async ({pageParam = 1}: any) => {
+  const {count} = await supabase.from('carts').select('*', {count: 'exact', head: true}).eq('order_status', true);
+
+  const pageToFetch = pageParam * 9 + (pageParam - 1);
+
+  const {data, error} = await supabase
+    .from('carts')
+    .select(`*,users(*)`)
+    .eq('order_status', true)
+    .range(pageToFetch - 9, pageToFetch)
+    .order('created_at', {ascending: false});
+
+  if (error) {
+    throw error;
+  }
+  return {data, total_pages: Math.ceil((count ?? 0) / 10), page: pageParam, count};
+};
