@@ -53,21 +53,27 @@ export interface Database {
           cart_id: string;
           cart_list: Json[];
           created_at: string;
+          order_date: string | null;
           order_status: boolean;
+          total_price: number;
           user_id: string;
         };
         Insert: {
           cart_id?: string;
           cart_list?: Json[];
           created_at?: string;
+          order_date?: string | null;
           order_status?: boolean;
+          total_price?: number;
           user_id: string;
         };
         Update: {
           cart_id?: string;
           cart_list?: Json[];
           created_at?: string;
+          order_date?: string | null;
           order_status?: boolean;
+          total_price?: number;
           user_id?: string;
         };
         Relationships: [
@@ -131,7 +137,7 @@ export interface Database {
           address_detail: string | null;
           created_at: string;
           email: string | null;
-          phone: string | null;
+          phone: string;
           point: number | null;
           role: string;
           user_id: string;
@@ -143,7 +149,7 @@ export interface Database {
           address_detail?: string | null;
           created_at?: string;
           email?: string | null;
-          phone?: string | null;
+          phone?: string;
           point?: number | null;
           role?: string;
           user_id: string;
@@ -155,7 +161,7 @@ export interface Database {
           address_detail?: string | null;
           created_at?: string;
           email?: string | null;
-          phone?: string | null;
+          phone?: string;
           point?: number | null;
           role?: string;
           user_id?: string;
@@ -163,13 +169,6 @@ export interface Database {
           zonecode?: string;
         };
         Relationships: [
-          {
-            foreignKeyName: 'users_phone_fkey';
-            columns: ['phone'];
-            isOneToOne: false;
-            referencedRelation: 'users';
-            referencedColumns: ['phone'];
-          },
           {
             foreignKeyName: 'users_user_id_fkey';
             columns: ['user_id'];
