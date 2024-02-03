@@ -7,12 +7,14 @@ import {useRouter} from 'next/navigation';
 import {userUpdate} from '../src/api/auth';
 import {orderCart} from '../src/api/cart';
 import Postcode from '../src/components/order/PostCode';
+import useCartStore from '../src/store/carts.store';
 import useSessionStore from '../src/store/session.store';
 
 import type {TablesUpdate} from '../types/supabase';
 
 function Page() {
   const {session} = useSessionStore();
+  const {cart} = useCartStore();
   const router = useRouter();
   const [name, setName] = useState('');
   const [phoneNumber, setPhoneNumber] = useState('');
@@ -73,7 +75,7 @@ function Page() {
 
     // 아래 함수를 만들어서 주문 요청을 완료부탁드립니다.
     // cart api에 함수 이름만 만들어놓음
-    await orderCart();
+    await orderCart(cart);
 
     alert('주문이 완료되었습니다.');
     router.push('/');

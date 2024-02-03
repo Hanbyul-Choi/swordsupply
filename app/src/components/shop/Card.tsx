@@ -41,7 +41,6 @@ function Card({product}: {product: Tables<'products'>}) {
     setCart(newCart);
     updateCart(newCart);
     alert('카트에 담겼습니다!');
-    console.log(newCart);
     return form;
   };
   let statusMsg = '카트에 담기';

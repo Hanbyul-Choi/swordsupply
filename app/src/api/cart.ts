@@ -32,7 +32,17 @@ export const updateCart = async (newCarts: TablesInsert<'carts'>) => {
   }
 };
 
-export const orderCart = async () => {};
+export const orderCart = async (cart, totalPrice, orderDate) => {
+  const {data, error} = await supabase
+    .from('carts')
+    .update({order_status: true, total_price: totalPrice, order_date: orderDate})
+    .eq('cart_id', cart.cart_id)
+    .select();
+  if (error) {
+    return error;
+  }
+  return data;
+};
 
 export const getOrderList = async ({pageParam = 1}: any) => {
   const {count} = await supabase.from('carts').select('*', {count: 'exact', head: true}).eq('order_status', true);
