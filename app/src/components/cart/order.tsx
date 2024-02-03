@@ -92,8 +92,8 @@ function Order({totalPrice}) {
     const orderDate = `${today.getFullYear()}.${
       today.getMonth() + 1
     }.${today.getDate()}/${today.getHours()}:${today.getMinutes()}:${today.getSeconds()}`;
-
-    const data = await orderCart(cart, totalPrice, orderDate);
+    const price = Number(totalPrice) <= 100000 ? totalPrice + 3000 : totalPrice;
+    const data = await orderCart(cart, price, orderDate);
 
     if (data) {
       await postCart({user_id});

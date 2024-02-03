@@ -32,10 +32,10 @@ export const updateCart = async (newCarts: TablesInsert<'carts'>) => {
   }
 };
 
-export const orderCart = async (cart, totalPrice, orderDate) => {
+export const orderCart = async (cart, price, orderDate) => {
   const {data, error} = await supabase
     .from('carts')
-    .update({order_status: true, total_price: totalPrice, order_date: orderDate})
+    .update({order_status: true, total_price: price, order_date: orderDate})
     .eq('cart_id', cart.cart_id)
     .select();
   if (error) {
