@@ -31,3 +31,8 @@ export const getCartProducts = async (cartProducts: string[]) => {
   const {data} = await supabase.from('products').select('*').in('product_id', cartProducts);
   return data;
 };
+
+export const getCartProductNames = async (product_ids: string[]) => {
+  const {data} = await supabase.from('products').select('product_name').in('product_id', product_ids);
+  return data;
+};

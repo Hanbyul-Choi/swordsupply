@@ -7,7 +7,7 @@ interface Props {
 }
 function BrandNavBar({selectBrandHandler, brands, selectedBrand}: Props) {
   return (
-    <div className="flex gap-4 items-center">
+    <div className="gap-4 items-center justify-center flex w-full sm:w-3/4 flex-wrap">
       {brands.map((brand, index) => (
         <button
           key={index}

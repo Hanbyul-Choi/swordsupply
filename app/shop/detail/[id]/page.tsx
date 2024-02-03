@@ -117,10 +117,10 @@ function Page({params: {id}, searchParams: {brand}}: {params: {id: string}; sear
           </div>
           <div className="space-y-2">
             <p className="text-sm">
-              <span className="font-bold">배송비</span> 3,000원 (<u>100,000원</u> 이상 구매 시 무료배송)
+              <span className="font-semibold">배송비</span> 3,000원 (100,000원 이상 구매 시 무료배송)
             </p>
-            <p className="text-sm">
-              <span className="font-bold">구매혜택</span>{' '}
+            {/* <p className="text-sm">
+              <span className="font-semibold">구매혜택</span>{' '}
               {addCommas(
                 Number(
                   (
@@ -134,7 +134,7 @@ function Page({params: {id}, searchParams: {brand}}: {params: {id: string}; sear
                   0.1,
               )}
               point 적립 예정
-            </p>
+            </p> */}
           </div>
           <div className="bg-[#f9f9f9] p-4">
             {detailData.options?.length !== 0 && (

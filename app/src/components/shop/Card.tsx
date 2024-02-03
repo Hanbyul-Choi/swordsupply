@@ -33,6 +33,7 @@ function Card({product}: {product: Tables<'products'>}) {
     }
     const form = {
       id: product.product_id,
+      product_name: product.product_name,
       count,
       option: curOption,
     };
@@ -41,9 +42,9 @@ function Card({product}: {product: Tables<'products'>}) {
     setCart(newCart);
     updateCart(newCart);
     alert('카트에 담겼습니다!');
-    console.log(newCart);
     return form;
   };
+
   let statusMsg = '카트에 담기';
 
   switch (product.status) {
