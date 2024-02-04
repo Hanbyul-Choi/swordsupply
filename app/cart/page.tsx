@@ -163,7 +163,9 @@ function Page() {
             </div>
           </div>
           {isOrder && <Order totalPrice={totalPrice} />}
-          <button className="mx-auto bg-black text-white text-xl p-2 px-8 hover:opacity-75">
+          <button
+            onClick={() => setIsOrder(!isOrder)}
+            className="mx-auto bg-black text-white text-xl p-2 px-8 hover:opacity-75">
             {isOrder ? '취소하기' : '주문하기'}
           </button>
         </>

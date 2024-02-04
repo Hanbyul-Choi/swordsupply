@@ -9,7 +9,7 @@ export default function OrderCard({data}) {
     return acc + Number(cur.count);
   }, 0);
   return (
-    <div className="w-96 flex flex-col gap-2 bg-slate-400">
+    <div className="w-96 flex flex-col gap-2 border border-black">
       <div className="flex justify-between border">
         <p>{order_date.split('/')[0]}</p>
         <button onClick={() => setIsDetail(!isDetail)}>{isDetail ? '닫기' : '주문상세보기'}</button>
@@ -18,9 +18,12 @@ export default function OrderCard({data}) {
       <p>{total_price}원</p>
       {isDetail && (
         <div className="border-t-2 flex flex-col gap-2">
-          <p>주문일시 : {order_date}</p>
+          <div className="flex">
+            <p className="font-bold">주문일시 </p>
+            <p> : {order_date}</p>
+          </div>
           <div className="border">
-            <p className="mb-2">주문상품목록</p>
+            <p className="mb-2 font-bold">주문상품목록</p>
             {cart_list.map(item => (
               <div className="flex gap-3" key={item.id}>
                 <p className="w-[20%]">{item.product_name}</p>
@@ -29,9 +32,16 @@ export default function OrderCard({data}) {
               </div>
             ))}
           </div>
-          <p>상품금액: {total_price < 103001 ? total_price - 3000 : total_price}</p>
-          <p>배송비 : {total_price < 103001 ? '3000원' : '무료'}</p>
-          <p>총 주문금액 : {total_price}</p>
+          <div className="flex">
+            <p className="font-bold">상품금액 : </p>
+            <p> {total_price < 103001 ? `${total_price - 3000}원` : `${total_price}원`}</p>
+          </div>
+          <div className="flex">
+            <p className="font-bold">배송비 : </p> <p> {total_price < 103001 ? ' 3000원' : ' 무료'}</p>
+          </div>
+          <div className="flex">
+            <p className="font-bold">총 주문금액 : </p> <p>{total_price}원</p>
+          </div>
         </div>
       )}
     </div>
