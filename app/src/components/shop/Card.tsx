@@ -5,7 +5,7 @@ import {Select} from 'antd';
 import Image from 'next/image';
 import Link from 'next/link';
 
-import {updateCart} from '../../api/cart';
+import {getCart, postCart, updateCart} from '../../api/cart';
 import useCartStore from '../../store/carts.store';
 import {changeJson, isAlreadyCart} from '../../utils/common';
 import CountControl from '../common/CountControl';
@@ -15,7 +15,7 @@ import PriceSection from '../PriceSection';
 import type {Option} from '../admin/post/useAddOption';
 import type {Tables} from '@/app/types/supabase';
 
-function Card({product}: {product: Tables<'products'>}) {
+function Card({product, user_id}: {product: Tables<'products'>; user_id: string}) {
   const {cart, setCart} = useCartStore();
   const {count, onChangeCount, onClickMinus, onClickPlus} = useCountControl();
   const defaulteOption = product?.options !== null ? (product?.options[0] as Option) : null;
@@ -26,7 +26,7 @@ function Card({product}: {product: Tables<'products'>}) {
     setCurOption(value);
   };
 
-  const putInCart = () => {
+  const putInCart = async () => {
     if (isAlreadyCart(changeJson(cart?.cart_list), product.product_id, curOption)) {
       alert('이미 카트에 담겨있습니다.');
       return;
@@ -37,10 +37,17 @@ function Card({product}: {product: Tables<'products'>}) {
       count,
       option: curOption,
     };
-    const newCart = {...cart};
-    newCart.cart_list.push(form);
-    setCart(newCart);
-    updateCart(newCart);
+    if (!cart) {
+      await postCart({user_id, cart_list: [form]});
+      const {data} = await getCart(user_id);
+      setCart(data);
+    } else {
+      const newCart = {...cart};
+      newCart.cart_list.push(form);
+      setCart(newCart);
+      updateCart(newCart);
+    }
+
     alert('카트에 담겼습니다!');
     return form;
   };

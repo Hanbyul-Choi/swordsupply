@@ -20,10 +20,10 @@ function Page() {
   const [products, setProducts] = useState([]);
   const [totalPrice, setTotalPrice] = useState(0);
   const [totalCount, setTotalCount] = useState(0);
+  const [isLoading, setIsLoading] = useState(true);
   const [isOrder] = useState(false);
   const fetchData = useCallback(async () => {
     if (cart && cart.cart_list.length > 0 && products.length === 0) {
-      console.log('a');
       const ids = cart.cart_list.map((product: idsI) => product.id);
       if (ids.length > 0) {
         const productData = await getCartProducts(ids);
@@ -45,6 +45,7 @@ function Page() {
     if (!cart && session) {
       fetchCart(session.user_id);
     }
+    setIsLoading(false);
   });
 
   useEffect(() => {
@@ -115,7 +116,7 @@ function Page() {
     );
   }
 
-  if (!cart) {
+  if (isLoading) {
     return (
       <div className="flex justify-center items-center h-[60vh]">
         <BarLoader color="#36d7b7" width={200} height={5} />
@@ -126,39 +127,45 @@ function Page() {
   return (
     <div className="flex flex-col mx-auto max-w-[1080px] p-8 gap-12">
       <h3 className="w-full text-center text-2xl">나의 쇼핑카트</h3>
-      <div className="flex flex-col w-full gap-1 bg-[#ecf0f4] p-2">
-        {cart?.cart_list?.map((item, i) => (
-          <CartCard
-            key={i}
-            product={products.find(obj => obj.product_id === changeJson(item).id)}
-            cart_info={changeJson(item)}
-            removeItem={removeItem}
-          />
-        ))}
-      </div>
-      <div className="w-full border-y-2 border-black space-y-2 pb-4">
-        <p className="border-b-[1px] py-3">총 주문 상품 {totalCount}개</p>
-        <div className="w-full flex justify-center py-4 gap-4">
-          <div>
-            <p className="text-2xl font-bold">{addCommas(totalPrice)}원</p>
-            <p className="text-slate-400 text-center mt-4">상품 금액</p>
+      {cart && (
+        <>
+          <div className="flex flex-col w-full gap-1 bg-[#ecf0f4] p-2">
+            {cart?.cart_list?.map((item, i) => (
+              <CartCard
+                key={i}
+                product={products.find(obj => obj.product_id === changeJson(item).id)}
+                cart_info={changeJson(item)}
+                removeItem={removeItem}
+              />
+            ))}
           </div>
-          <p className="text-lg">+</p>
-          <div>
-            <p className="text-2xl font-bold">{totalPrice >= 100000 ? '무료' : '3,000원'}</p>
-            <p className="text-slate-400 text-center mt-4">배송비</p>
+          <div className="w-full border-y-2 border-black space-y-2 pb-4">
+            <p className="border-b-[1px] py-3">총 주문 상품 {totalCount}개</p>
+            <div className="w-full flex justify-center py-4 gap-4">
+              <div>
+                <p className="text-2xl font-bold">{addCommas(totalPrice)}원</p>
+                <p className="text-slate-400 text-center mt-4">상품 금액</p>
+              </div>
+              <p className="text-lg">+</p>
+              <div>
+                <p className="text-2xl font-bold">{totalPrice >= 100000 ? '무료' : '3,000원'}</p>
+                <p className="text-slate-400 text-center mt-4">배송비</p>
+              </div>
+              <p className="text-lg">=</p>
+              <div>
+                <p className="text-2xl font-bold">
+                  {addCommas(totalPrice >= 100000 ? totalPrice : totalPrice + 3000)}원
+                </p>
+                <p className="text-slate-400 text-center mt-4">총 주문금액</p>
+              </div>
+            </div>
           </div>
-          <p className="text-lg">=</p>
-          <div>
-            <p className="text-2xl font-bold">{addCommas(totalPrice >= 100000 ? totalPrice : totalPrice + 3000)}원</p>
-            <p className="text-slate-400 text-center mt-4">총 주문금액</p>
-          </div>
-        </div>
-      </div>
-      {isOrder && <Order />}
-      <button className="mx-auto bg-black text-white text-xl p-2 px-8 hover:opacity-75">
-        {isOrder ? '취소하기' : '주문하기'}
-      </button>
+          {isOrder && <Order />}
+          <button className="mx-auto bg-black text-white text-xl p-2 px-8 hover:opacity-75">
+            {isOrder ? '취소하기' : '주문하기'}
+          </button>
+        </>
+      )}
     </div>
   );
 }
