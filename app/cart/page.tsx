@@ -13,7 +13,6 @@ import useSessionStore from '../src/store/session.store';
 import {addCommas, changeJson} from '../src/utils/common';
 
 export type idsI = {id: string; count: string; option: string | null};
-
 function Page() {
   const {session} = useSessionStore();
   const {cart, setCart} = useCartStore();
