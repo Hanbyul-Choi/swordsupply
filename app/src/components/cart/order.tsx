@@ -5,13 +5,15 @@ import React, {useState} from 'react';
 import {useRouter} from 'next/navigation';
 
 import {userUpdate} from '../../api/auth';
-import {orderCart} from '../../api/cart';
+import {orderCart, postCart} from '../../api/cart';
+import useCartStore from '../../store/carts.store';
 import useSessionStore from '../../store/session.store';
 import Postcode from '../order/PostCode';
 
 import type {TablesUpdate} from '@/app/types/supabase';
 
-function Order() {
+function Order({totalPrice}) {
+  const {cart, setCart} = useCartStore();
   const {session} = useSessionStore();
   const router = useRouter();
   const [name, setName] = useState('');
@@ -25,7 +27,8 @@ function Order() {
 
   const [saveAddress, setSaveAddress] = useState(true);
   const [checkPolicy, setCheckPolicy] = useState(false);
-
+  const [errMsg, setErrMsg] = useState(false);
+  const [policyMsg, setPolicyMsg] = useState(false);
   const changeNameHandler = (event: ChangeEvent<HTMLInputElement>) => {
     setName(event.target.value);
   };
@@ -60,6 +63,13 @@ function Order() {
     event.preventDefault();
 
     if (!name || !phoneNumber || !address.address || !address.detailAddress || !address.zonecode) {
+      setErrMsg(true);
+      setPolicyMsg(false);
+      return;
+    }
+    if (!checkPolicy) {
+      setErrMsg(false);
+      setPolicyMsg(true);
       return;
     }
 
@@ -78,10 +88,23 @@ function Order() {
 
     // 아래 함수를 만들어서 주문 요청을 완료부탁드립니다.
     // cart api에 함수 이름만 만들어놓음
-    await orderCart();
+    let today = new Date();
+    const orderDate = `${today.getFullYear()}.${
+      today.getMonth() + 1
+    }.${today.getDate()}/${today.getHours()}:${today.getMinutes()}:${today.getSeconds()}`;
+    const price = Number(totalPrice) <= 100000 ? totalPrice + 3000 : totalPrice;
+    const data = await orderCart(cart, price, orderDate);
+
+    if (data) {
+      await postCart({user_id});
+      setCart(null);
+    } else {
+      alert('주문에 실패했습니다');
+      location.reload();
+    }
 
     alert('주문이 완료되었습니다.');
-    router.push('/');
+    router.push('/cart/order');
   };
 
   return (
@@ -159,7 +182,7 @@ function Order() {
                 <input type="text" className="p-2 w-1/2" value={address.extraAddress} onChange={() => {}} />
               </div>
             </div>
-            <span className="text-red-600">필수항목을 모두 입력해주세요</span>
+            {errMsg && <span className="text-red-600">필수항목을 모두 입력해주세요</span>}
             <div className="space-y-2 mt-6">
               <div className="flex gap-2">
                 <input
@@ -177,8 +200,11 @@ function Order() {
                   onChange={() => setCheckPolicy(prev => !prev)}
                   className="w-4"
                 />
-                <p>환불 정책에 동의합니다.</p>
-                <p>환불 정책에 동의해야 주문이 가능합니다!</p>
+                <p>
+                  환불 정책에 동의합니다. <span className="text-red-500">* </span>
+                </p>
+
+                {policyMsg && <p className="text-red-500"> 환불 정책에 동의해주세요</p>}
               </div>
             </div>
             <button className="w-full bg-black text-white p-2 mt-4">주문 및 결제</button>

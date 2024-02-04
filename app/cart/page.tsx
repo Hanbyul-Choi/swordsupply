@@ -21,7 +21,7 @@ function Page() {
   const [totalPrice, setTotalPrice] = useState(0);
   const [totalCount, setTotalCount] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
-  const [isOrder] = useState(false);
+  const [isOrder, setIsOrder] = useState(false);
   const fetchData = useCallback(async () => {
     if (cart && cart.cart_list.length > 0 && products.length === 0) {
       const ids = cart.cart_list.map((product: idsI) => product.id);
@@ -34,6 +34,9 @@ function Page() {
       updateCart(cart);
     }
   }, [cart, products]);
+  const openOrder = () => {
+    setIsOrder(prev => !prev);
+  };
 
   useEffect(() => {
     const fetchCart = async id => {
@@ -160,7 +163,7 @@ function Page() {
               </div>
             </div>
           </div>
-          {isOrder && <Order />}
+          {isOrder && <Order totalPrice={totalPrice} />}
           <button className="mx-auto bg-black text-white text-xl p-2 px-8 hover:opacity-75">
             {isOrder ? '취소하기' : '주문하기'}
           </button>
