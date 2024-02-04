@@ -62,3 +62,16 @@ export const getOrderList = async ({pageParam = 1}: any) => {
   }
   return {data, total_pages: Math.ceil((count ?? 0) / 10), page: pageParam, count};
 };
+
+export const getOrders = async userId => {
+  const {data, error} = await supabase
+    .from('carts')
+    .select('*')
+    .eq('user_id', userId)
+    .eq('order_status', true)
+    .order('created_at', {ascending: false});
+  if (error) {
+    console.log(error);
+  }
+  return data;
+};

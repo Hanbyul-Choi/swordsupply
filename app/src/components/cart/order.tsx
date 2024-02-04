@@ -5,7 +5,7 @@ import React, {useState} from 'react';
 import {useRouter} from 'next/navigation';
 
 import {userUpdate} from '../../api/auth';
-import {orderCart, postCart} from '../../api/cart';
+import {orderCart} from '../../api/cart';
 import useCartStore from '../../store/carts.store';
 import useSessionStore from '../../store/session.store';
 import Postcode from '../order/PostCode';
@@ -96,7 +96,6 @@ function Order({totalPrice}) {
     const data = await orderCart(cart, price, orderDate);
 
     if (data) {
-      await postCart({user_id});
       setCart(null);
     } else {
       alert('주문에 실패했습니다');
