@@ -1,6 +1,6 @@
 import React from 'react';
 
-import {changeJson} from '../../utils/common';
+import {addCommas, changeJson} from '../../utils/common';
 
 import type {Tables} from '@/app/types/supabase';
 
@@ -20,9 +20,11 @@ async function OrderCart({order, index}: {order: Tables<'carts'> & {users: Table
             </div>
           ))}
         </td>
-        <td className="">{order.total_price}</td>
+        <td className="">{addCommas(order.total_price)}원</td>
         <td className="">{users.phone}</td>
-        <td className="">{order.order_date}</td>
+        <td className="">
+          <p>{order.order_date?.split('/')[0]}</p>
+        </td>
       </tr>
     </tbody>
   );

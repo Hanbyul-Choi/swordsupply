@@ -8,8 +8,8 @@ function KakaoSignIn() {
   return (
     <button
       className="mt-2 p-[10px] bg-[#FFEB3B] rounded-lg"
-      onClick={() => {
-        supabase.auth.signInWithOAuth({
+      onClick={async () => {
+        await supabase.auth.signInWithOAuth({
           provider: 'kakao',
         });
       }}>

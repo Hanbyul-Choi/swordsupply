@@ -80,6 +80,7 @@ function Header() {
           setSession(await getUser(user_id));
         }
         setSession(userData);
+
         const {data: user_cart, error} = await getCart(user_id);
         if (user_cart && !error) {
           setCart(user_cart);

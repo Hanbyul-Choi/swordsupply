@@ -14,11 +14,12 @@ export const getCart = async (user_id: string) => {
 };
 
 export const postCart = async (newCarts: TablesInsert<'carts'>) => {
-  const {error} = await supabase.from('carts').insert(newCarts);
+  const {data, error} = await supabase.from('carts').insert(newCarts);
   if (error) {
     console.log(error);
     throw error;
   }
+  return data;
 };
 
 export const updateCart = async (newCarts: TablesInsert<'carts'>) => {

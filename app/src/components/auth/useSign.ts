@@ -80,8 +80,8 @@ export default function useSign(signType: 'SignIn' | 'SignUp') {
       return error;
     }
     if (data) {
-      const {id: user_id} = data.user;
-      await setUserData({user_id});
+      const {id: user_id, email} = data.user;
+      await setUserData({user_id, email});
       await postCart({user_id});
       alert('회원가입이 완료되었습니다.');
     }
