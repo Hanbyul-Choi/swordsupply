@@ -56,7 +56,7 @@ function Page() {
   if (isLoaded && orders.length > 0) {
     return (
       <div className="w-full flex flex-col items-center justify-center mt-16 gap-8">
-        <p>주문목록</p>
+        <h1 className="font-bold text-2xl">주문내역</h1>
         {orders.map(data => {
           return <OrderCard data={data} key={data.cart_id} />;
         })}
