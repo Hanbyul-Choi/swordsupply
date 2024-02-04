@@ -11,7 +11,7 @@ interface props {
 
 function CountControl({count, onChangeCount, onClickMinus, onClickPlus}: props) {
   return (
-    <div className="flex gap-2 border-[1px] rounded-md w-full justify-around items-center bg-white">
+    <div className="flex border-[1px] rounded-[6px] w-full justify-around items-center bg-white h-full">
       <button className="w-full text-2xl font-light text-start pl-2" onClick={onClickMinus}>
         -
       </button>

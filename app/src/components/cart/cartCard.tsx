@@ -58,56 +58,58 @@ function CartCard({product, cart_info, removeItem}: CardProps) {
         className="absolute top-2 right-2 border-[1px] border-red-500 px-2 text-red-500">
         삭제
       </button>
-      <div className="flex items-center">
+      <div className="flex items-center w-full">
         <div className="w-20 relative mr-8" style={{aspectRatio: '1/1'}}>
           <Image src={product.thumbnail ?? ''} alt="" fill sizes="100" style={{objectFit: 'cover'}} />
         </div>
-        <div>
-          <p className="">{product.product_name}</p>
-          <PriceSection
-            event_price={product.event_price}
-            origin_price={product.origin_price}
-            options={product.options as Option[]}
-            cur_option={curOption}
-          />
-        </div>
-      </div>
-      <div className="flex items-center">
-        <div className="gap-2 w-full flex mr-2.5">
-          {product.options?.length !== 0 && product.options && (
-            <div className="min-w-24">
-              <Select
-                value={curOption}
-                style={{width: '100%', textAlign: 'center'}}
-                onChange={handleChange}
-                options={product.options?.map(option => {
-                  const newOpt = option as Option;
-                  return {value: newOpt.option_name, label: newOpt.option_name, filterOption: 'a'};
-                })}
-              />
-            </div>
-          )}
+        <div className="flex flex-col gap-2 sm:flex-row sm:items-center justify-center sm:justify-between w-full">
           <div>
-            <CountControl
-              count={count}
-              onChangeCount={onChangeCount}
-              onClickMinus={onClickMinus}
-              onClickPlus={onClickPlus}
+            <p className="">{product.product_name}</p>
+            <PriceSection
+              event_price={product.event_price}
+              origin_price={product.origin_price}
+              options={product.options as Option[]}
+              cur_option={curOption}
             />
           </div>
-        </div>
-        <div className="w-24 text-nowrap text-end">
-          {addCommas(
-            Number(
-              (
-                product.event_price ||
-                product.origin_price ||
-                findPrice('event_price', curOption, product.options as Option[]) ||
-                findPrice('origin_price', curOption, product.options as Option[])
-              ).replaceAll(',', ''),
-            ) * Number(count),
-          )}
-          원
+          <div className="flex items-center sm:pt-6">
+            <div className="gap-2 w-full flex mr-2.5 flex-col min-[380px]:flex-row">
+              {product.options?.length !== 0 && product.options && (
+                <div className="w-20 h-8 ">
+                  <Select
+                    value={curOption}
+                    style={{width: '100%', textAlign: 'center', height: '100%'}}
+                    onChange={handleChange}
+                    options={product.options?.map(option => {
+                      const newOpt = option as Option;
+                      return {value: newOpt.option_name, label: newOpt.option_name, filterOption: 'a'};
+                    })}
+                  />
+                </div>
+              )}
+              <div className="w-20">
+                <CountControl
+                  count={count}
+                  onChangeCount={onChangeCount}
+                  onClickMinus={onClickMinus}
+                  onClickPlus={onClickPlus}
+                />
+              </div>
+            </div>
+            <div className="text-nowrap text-start">
+              {addCommas(
+                Number(
+                  (
+                    product.event_price ||
+                    product.origin_price ||
+                    findPrice('event_price', curOption, product.options as Option[]) ||
+                    findPrice('origin_price', curOption, product.options as Option[])
+                  ).replaceAll(',', ''),
+                ) * Number(count),
+              )}
+              원
+            </div>
+          </div>
         </div>
       </div>
     </div>

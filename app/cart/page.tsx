@@ -34,6 +34,7 @@ function Page() {
       updateCart(cart);
     }
   }, [cart, products]);
+
   const openOrder = () => {
     setIsOrder(prev => !prev);
   };

@@ -8,17 +8,22 @@ import Link from 'next/link';
 import {Carousel} from 'react-responsive-carousel';
 import {BarLoader} from 'react-spinners';
 
+import {getCart, postCart, updateCart} from '@/app/src/api/cart';
 import {getProductsWithBrand} from '@/app/src/api/products';
 import CountControl from '@/app/src/components/common/CountControl';
 import {useCountControl} from '@/app/src/components/common/useCountControl';
 import PriceSection from '@/app/src/components/PriceSection';
-import {addCommas, findPrice} from '@/app/src/utils/common';
+import useCartStore from '@/app/src/store/carts.store';
+import useSessionStore from '@/app/src/store/session.store';
+import {addCommas, changeJson, findPrice, isAlreadyCart} from '@/app/src/utils/common';
 
 import type {Option} from '@/app/src/components/admin/post/useAddOption';
 import type {Tables} from '@/app/types/supabase';
 
 function Page({params: {id}, searchParams: {brand}}: {params: {id: string}; searchParams: {brand: string}}) {
   const queryClient = useQueryClient();
+  const {cart, setCart} = useCartStore();
+  const {session} = useSessionStore();
   const {count, onChangeCount, onClickMinus, onClickPlus, resetCount} = useCountControl();
   const cacheData: any = queryClient.getQueryData([brand]);
   const {data, isLoading} = useQuery({queryKey: [brand, 'detail'], queryFn: () => getProductsWithBrand(brand)});
@@ -28,9 +33,9 @@ function Page({params: {id}, searchParams: {brand}}: {params: {id: string}; sear
     productsData = data || [];
   }
 
-  const detailData = productsData?.find(product => product.product_id === id);
+  const product = productsData?.find(product => product.product_id === id);
 
-  const defaulteOption = detailData?.options !== null ? (detailData?.options[0] as Option) : null;
+  const defaulteOption = product?.options !== null ? (product?.options[0] as Option) : null;
   const [curOption, setCurOption] = useState<null | string>(
     defaulteOption !== null ? defaulteOption?.option_name : null,
   );
@@ -44,11 +49,30 @@ function Page({params: {id}, searchParams: {brand}}: {params: {id: string}; sear
     resetCount();
   };
 
-  const putInCart = () => {
+  const putInCart = async () => {
+    const {user_id} = session;
+    if (isAlreadyCart(changeJson(cart?.cart_list), product.product_id, curOption)) {
+      alert('이미 카트에 담겨있습니다.');
+      return;
+    }
     const form = {
-      curOption,
+      id: product.product_id,
+      product_name: product.product_name,
       count,
+      option: curOption,
     };
+    if (!cart) {
+      await postCart({user_id, cart_list: [form]});
+      const {data} = await getCart(user_id);
+      setCart(data);
+    } else {
+      const newCart = {...cart};
+      newCart.cart_list.push(form);
+      setCart(newCart);
+      updateCart(newCart);
+    }
+
+    alert('카트에 담겼습니다!');
     return form;
   };
 
@@ -60,13 +84,13 @@ function Page({params: {id}, searchParams: {brand}}: {params: {id: string}; sear
     );
   }
 
-  if (!detailData) {
+  if (!product) {
     return <div className="flex justify-center items-center mt-96 text-2xl">해당 제품이 존재하지 않습니다.</div>;
   }
 
   let statusMsg = '카트에 담기';
 
-  switch (detailData.status) {
+  switch (product.status) {
     case 'SoldOut':
       statusMsg = '품절';
       break;
@@ -87,10 +111,10 @@ function Page({params: {id}, searchParams: {brand}}: {params: {id: string}; sear
               title: <a href="/shop">SHOP</a>,
             },
             {
-              title: <a href={`/shop?brand=${detailData.brand}`}>{detailData.brand.toUpperCase()}</a>,
+              title: <a href={`/shop?brand=${product.brand}`}>{product.brand.toUpperCase()}</a>,
             },
             {
-              title: `${detailData.product_name}`,
+              title: `${product.product_name}`,
             },
           ]}
         />
@@ -98,7 +122,7 @@ function Page({params: {id}, searchParams: {brand}}: {params: {id: string}; sear
       <div className="flex flex-col justify-center gap-8 w-full md:flex-row">
         <div className="w-full md:w-1/2">
           <Carousel showArrows={false} showStatus={false} infiniteLoop emulateTouch thumbWidth={70}>
-            {detailData.images?.map((img, i) => (
+            {product.images?.map((img, i) => (
               <div key={i}>
                 <img src={img} alt="제품 사진" style={{width: '100%', objectFit: 'cover', aspectRatio: '1/1'}} />
               </div>
@@ -107,11 +131,11 @@ function Page({params: {id}, searchParams: {brand}}: {params: {id: string}; sear
         </div>
         <article className="space-y-8 w-full md:w-1/2">
           <div className="border-b-2 pb-3 space-y-2">
-            <h3 className="text-2xl">{detailData.product_name}</h3>
+            <h3 className="text-2xl">{product.product_name}</h3>
             <PriceSection
-              event_price={detailData.event_price}
-              origin_price={detailData.origin_price}
-              options={detailData.options as Option[]}
+              event_price={product.event_price}
+              origin_price={product.origin_price}
+              options={product.options as Option[]}
               cur_option={curOption}
             />
           </div>
@@ -124,10 +148,10 @@ function Page({params: {id}, searchParams: {brand}}: {params: {id: string}; sear
               {addCommas(
                 Number(
                   (
-                    detailData.event_price ||
-                    detailData.origin_price ||
-                    findPrice('event_price', curOption, detailData.options as Option[]) ||
-                    findPrice('origin_price', curOption, detailData.options as Option[])
+                    product.event_price ||
+                    product.origin_price ||
+                    findPrice('event_price', curOption, product.options as Option[]) ||
+                    findPrice('origin_price', curOption, product.options as Option[])
                   ).replaceAll(',', ''),
                 ) *
                   Number(count) *
@@ -137,7 +161,7 @@ function Page({params: {id}, searchParams: {brand}}: {params: {id: string}; sear
             </p> */}
           </div>
           <div className="bg-[#f9f9f9] p-4">
-            {detailData.options?.length !== 0 && (
+            {product.options?.length !== 0 && (
               <>
                 <p className="w-full border-b-2 pb-2">사이즈</p>
                 <div className="w-1/4 mt-2">
@@ -145,7 +169,7 @@ function Page({params: {id}, searchParams: {brand}}: {params: {id: string}; sear
                     defaultValue={defaulteOption?.option_name}
                     style={{width: '100%', height: '2rem', textAlign: 'center'}}
                     onChange={handleChange}
-                    options={detailData.options?.map(option => {
+                    options={product.options?.map(option => {
                       const newOpt = option as Option;
                       return {value: newOpt.option_name, label: newOpt.option_name};
                     })}
@@ -168,10 +192,10 @@ function Page({params: {id}, searchParams: {brand}}: {params: {id: string}; sear
                 {addCommas(
                   Number(
                     (
-                      detailData.event_price ||
-                      detailData.origin_price ||
-                      findPrice('event_price', curOption, detailData.options as Option[]) ||
-                      findPrice('origin_price', curOption, detailData.options as Option[])
+                      product.event_price ||
+                      product.origin_price ||
+                      findPrice('event_price', curOption, product.options as Option[]) ||
+                      findPrice('origin_price', curOption, product.options as Option[])
                     ).replaceAll(',', ''),
                   ) * Number(count),
                 )}
@@ -185,10 +209,10 @@ function Page({params: {id}, searchParams: {brand}}: {params: {id: string}; sear
               {addCommas(
                 Number(
                   (
-                    detailData.event_price ||
-                    detailData.origin_price ||
-                    findPrice('event_price', curOption, detailData.options as Option[]) ||
-                    findPrice('origin_price', curOption, detailData.options as Option[])
+                    product.event_price ||
+                    product.origin_price ||
+                    findPrice('event_price', curOption, product.options as Option[]) ||
+                    findPrice('origin_price', curOption, product.options as Option[])
                   ).replaceAll(',', ''),
                 ) * Number(count),
               )}
@@ -198,9 +222,9 @@ function Page({params: {id}, searchParams: {brand}}: {params: {id: string}; sear
             <button
               onClick={putInCart}
               className={`w-1/2 ml-auto bg-black text-white p-2 rounded-md hover:opacity-80 ${
-                detailData.status !== 'Available' && 'bg-slate-500'
+                product.status !== 'Available' && 'bg-slate-500'
               }`}
-              disabled={detailData.status !== 'Available'}>
+              disabled={product.status !== 'Available'}>
               {statusMsg}
             </button>
           </div>
@@ -214,7 +238,7 @@ function Page({params: {id}, searchParams: {brand}}: {params: {id: string}; sear
       </div>
       <div className="mt-20 p-4 text-center w-full border-t-2">
         <h3 className="text-lg my-10">제품설명</h3>
-        <p>{detailData.description}</p>
+        <p>{product.description}</p>
       </div>
     </div>
   );

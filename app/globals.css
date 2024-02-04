@@ -37,11 +37,11 @@ input[type='number'] {
 .ant-select-selection-item {
   font-size: 1rem;
 }
-/* .ant-select-selector {
-  border-radius: 4rem;
+.ant-select-single .ant-select-selector {
+  border-radius: none;
 }
-.ant-selector {
-  border-radius: 4rem;
+/* .ant-selector {
+  border-radius: none;
 } */
 .ant-select-item-option-content {
   font-size: 1rem;
