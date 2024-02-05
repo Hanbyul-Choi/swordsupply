@@ -9,7 +9,7 @@ import {GoLinkExternal} from 'react-icons/go';
 import {IoIosArrowDown} from 'react-icons/io';
 
 import EditForm from './form/editForm';
-import {deletePost, updateBestSeller, updateProductStatus} from '../../api/admin';
+import {updateBestSeller, updateProductStatus} from '../../api/admin';
 import {addCommas} from '../../utils/common';
 import {useModal} from '../overlay/modal/useModal';
 
@@ -39,7 +39,7 @@ function ListCard({product, index}: {product: Tables<'products'>; index: number}
   const deleteProduct = async (id: string, brand: string) => {
     const check = confirm('정말 삭제하시겠습니다?');
     if (check) {
-      await deletePost(id);
+      await updateProductStatus(id, 'disabled');
       queryClient.refetchQueries({queryKey: [brand]});
       alert('삭제 완료!');
     }

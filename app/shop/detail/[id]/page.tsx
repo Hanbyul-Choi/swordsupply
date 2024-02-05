@@ -166,8 +166,8 @@ function Page({params: {id}, searchParams: {brand}}: {params: {id: string}; sear
           <div className="bg-[#f9f9f9] p-4">
             {product.options?.length !== 0 && (
               <>
-                <p className="w-full border-b-2 pb-2">사이즈</p>
-                <div className="w-1/4 mt-2">
+                <p className="w-full border-b-2 pb-2">옵션</p>
+                <div className="w-1/2 mt-2">
                   <Select
                     defaultValue={defaulteOption?.option_name}
                     style={{width: '100%', height: '2rem', textAlign: 'center'}}
@@ -182,7 +182,7 @@ function Page({params: {id}, searchParams: {brand}}: {params: {id: string}; sear
             )}
             <p className="w-full border-b-2 pb-2 mt-4 ">수량</p>
             <div className="w-full mt-2 flex justify-between items-center">
-              <div className="w-1/4 bg-white">
+              <div className="w-1/2 bg-white">
                 <CountControl
                   count={count}
                   onChangeCount={onChangeCount}
@@ -225,9 +225,9 @@ function Page({params: {id}, searchParams: {brand}}: {params: {id: string}; sear
             <button
               onClick={putInCart}
               className={`w-1/2 ml-auto bg-black text-white p-2 rounded-md hover:opacity-80 ${
-                product.status !== 'Available' && 'bg-slate-500'
+                product.status !== 'available' && 'bg-slate-500'
               }`}
-              disabled={product.status !== 'Available'}>
+              disabled={product.status !== 'available'}>
               {statusMsg}
             </button>
           </div>

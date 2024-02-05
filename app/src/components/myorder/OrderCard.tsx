@@ -1,25 +1,26 @@
 'use client';
-import React, {useEffect, useState} from 'react';
+import React, {useState} from 'react';
 
 import {addCommas} from '../../utils/common';
 
 export default function OrderCard({data}) {
   const {cart_list, order_date, total_price} = data;
   const [isDetail, setIsDetail] = useState(false);
-  useEffect(() => {});
-  const totalCount = cart_list.reduce((acc, cur) => {
-    return acc + Number(cur.count);
-  }, 0);
+  // useEffect(() => {});
+  // const totalCount = cart_list.reduce((acc, cur) => {
+  //   return acc + Number(cur.count);
+  // }, 0);
+
   return (
-    <div className="w-96 flex flex-col gap-4 border border-black p-4">
+    <div className="w-full flex flex-col gap-4 border border-black p-4">
       <div className="flex justify-between border-b p-2">
         <p>{order_date.split('/')[0]}</p>
         <button onClick={() => setIsDetail(!isDetail)}>{isDetail ? '닫기' : '주문상세보기'}</button>
       </div>
       <div className="p-2">
         <p>
-          <strong>{totalCount == 1 ? cart_list[0].product_name : `${cart_list[0].product_name}`}</strong> 외{' '}
-          {`${cart_list.length - 1}개`}
+          <strong>{cart_list[0].product_name}</strong>
+          {cart_list.length > 1 && <span> 외 {cart_list.length - 1}종</span>}
         </p>
         <p className="text-end">{addCommas(total_price)}원</p>
       </div>
@@ -33,9 +34,9 @@ export default function OrderCard({data}) {
             <p className="mb-2 font-bold">주문상품목록</p>
             {cart_list.map(item => (
               <div className="flex gap-3 justify-between text-start" key={item.id}>
-                <p className="min-w-28">{item.product_name}</p>
+                <p className="min-w-24">{item.product_name}</p>
                 {item.option ? <p className="min-w-20">옵션:{item.option}</p> : ''}
-                <p className="min-w-20 text-end">{item.count}개</p>
+                <p className="min-w-16 text-end">{item.count}개</p>
               </div>
             ))}
           </div>

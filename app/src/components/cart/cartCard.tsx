@@ -59,7 +59,7 @@ function CartCard({product, cart_info, removeItem}: CardProps) {
         삭제
       </button>
       <div className="flex items-center w-full">
-        <div className="w-20 relative mr-8" style={{aspectRatio: '1/1'}}>
+        <div className="w-12 h-12 sm:w-20 sm:h-20 relative mr-8" style={{aspectRatio: '1/1'}}>
           <Image src={product.thumbnail ?? ''} alt="" fill sizes="100" style={{objectFit: 'cover'}} />
         </div>
         <div className="flex flex-col gap-2 sm:flex-row sm:items-center justify-center sm:justify-between w-full">
@@ -72,10 +72,10 @@ function CartCard({product, cart_info, removeItem}: CardProps) {
               cur_option={curOption}
             />
           </div>
-          <div className="flex items-center sm:pt-6">
+          <div className="flex items-center sm:gap-4 sm:pt-6">
             <div className="gap-2 w-full flex mr-2.5 flex-col min-[380px]:flex-row">
               {product.options?.length !== 0 && product.options && (
-                <div className="w-20 h-8 ">
+                <div className="w-full h-8 ">
                   <Select
                     value={curOption}
                     style={{width: '100%', textAlign: 'center', height: '100%'}}
@@ -87,7 +87,7 @@ function CartCard({product, cart_info, removeItem}: CardProps) {
                   />
                 </div>
               )}
-              <div className="w-20">
+              <div className="w-full">
                 <CountControl
                   count={count}
                   onChangeCount={onChangeCount}
@@ -96,7 +96,7 @@ function CartCard({product, cart_info, removeItem}: CardProps) {
                 />
               </div>
             </div>
-            <div className="text-nowrap text-start">
+            <div className="text-nowrap text-start mt-auto p-2">
               {addCommas(
                 Number(
                   (

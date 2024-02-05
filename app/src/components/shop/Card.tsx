@@ -116,9 +116,9 @@ function Card({product}: {product: Tables<'products'>}) {
         <button
           onClick={putInCart}
           className={`w-full bg-black text-white p-2 rounded-md hover:opacity-80 ${
-            product.status !== 'Available' && 'bg-slate-500'
+            product.status !== 'available' && 'bg-slate-500'
           }`}
-          disabled={product.status !== 'Available'}>
+          disabled={product.status !== 'available'}>
           {statusMsg}
         </button>
       </div>

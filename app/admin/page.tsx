@@ -24,7 +24,7 @@ function Page() {
     setSelectedBrand(brand);
   };
 
-  const defaultBrand = brands?.brands[0];
+  const defaultBrand = brands?.brands[0] || true;
 
   const {data, fetchNextPage, hasNextPage, isFetchingNextPage} = useInfiniteQuery({
     queryKey: [selectedBrand !== '' ? selectedBrand : defaultBrand],

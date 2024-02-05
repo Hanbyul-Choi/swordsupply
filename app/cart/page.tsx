@@ -27,6 +27,9 @@ function Page() {
       const ids = cart.cart_list.map((product: idsI) => product.id);
       if (ids.length > 0) {
         const productData = await getCartProducts(ids);
+        const newIds = productData.map(product => product.product_id);
+        const newCartList = changeJson(cart.cart_list).filter(cart => newIds.includes(cart.id));
+        setCart({...cart, cart_list: newCartList});
         setProducts(prevProducts => [...prevProducts, ...productData]);
       }
     }
@@ -139,7 +142,7 @@ function Page() {
       <h3 className="w-full text-center text-2xl">나의 쇼핑카트</h3>
       {cart && (
         <>
-          <div className="flex flex-col w-full gap-1 bg-[#ecf0f4] p-2">
+          <div className="flex flex-col w-full md:w-2/3 mx-auto gap-1 bg-[#ecf0f4] p-2">
             {cart?.cart_list?.map((item, i) => (
               <CartCard
                 key={i}

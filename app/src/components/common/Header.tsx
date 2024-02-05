@@ -124,28 +124,28 @@ function Header() {
 
   return (
     <div
-      className={`sticky left-0 top-0 w-full pt-8 flex flex-col justify-center gap-4 z-10 ${
+      className={`sticky left-0 top-0 w-full pt-8 flex flex-col justify-center gap-4 z-20 ${
         position < 70 ? 'bg-[#FFFFFF4c]' : 'bg-white  shadow-[1px_2px_4px_0_rgba(53,60,73,0.4)] '
       } `}>
       <div className="flex justify-between items-center mb-4 px-4 sm:px-10">
         <div className="w-28 sm:w-32 h-8" />
-        <Link className={`text-5xl font-anton text-black`} href={'/'}>
+        <Link className={`text-4xl sm:text-5xl font-anton text-black`} href={'/'}>
           SWORDSUPPLY
         </Link>
         <div className="flex gap-3 sm:gap-10 w-32 justify-center">
           {isLoaded && session ? (
             <Dropdown menu={{items}} className="cursor-pointer">
               <a onClick={e => e.preventDefault()}>
-                <FaUser size={18} className={`sm:hidden`} />
-                <FaUser size={25} className={`max-sm:hidden`} />
+                <FaUser size={20} className={`min-[430px]:hidden`} />
+                <FaUser size={25} className={`max-[430px]:hidden`} />
               </a>
             </Dropdown>
           ) : (
             <LoginModal />
           )}
           <Link href={'/cart'} className="relative">
-            <BsCart4 size={18} className={`sm:hidden`} />
-            <BsCart4 size={25} className={`max-sm:hidden`} />
+            <BsCart4 size={20} className={`min-[430px]:hidden`} />
+            <BsCart4 size={25} className={`max-[430px]:hidden`} />
             {session && cart && (
               <div className="bg-red-600 w-6 h-6 rounded-full text-center absolute -top-2 -right-3">
                 <span className="text-white">{cart?.cart_list?.length}</span>

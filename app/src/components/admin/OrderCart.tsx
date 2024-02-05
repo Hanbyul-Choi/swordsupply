@@ -28,7 +28,7 @@ function OrderCart({order, index}: Props) {
             주소보기
           </button>
           {showAddress && (
-            <div className="absolute -right-60 bg-slate-200 text-start p-4 py-6">
+            <div className="absolute -right-60 bg-slate-200 text-start p-4 py-6 z-10">
               <button
                 className="absolute bottom-2 right-2 border border-black px-2"
                 onClick={() => {

@@ -36,14 +36,16 @@ input[type='number'] {
 
 .ant-select-selection-item {
   font-size: 1rem;
+  width: fit-content;
 }
-.ant-select-single .ant-select-selector {
+/* .ant-select-single .ant-select-selector {
   border-radius: none;
-}
+} */
 /* .ant-selector {
   border-radius: none;
 } */
 .ant-select-item-option-content {
   font-size: 1rem;
   text-align: center;
+  width: fit-content;
 }
