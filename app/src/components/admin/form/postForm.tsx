@@ -71,6 +71,7 @@ function PostForm() {
     e.preventDefault();
     if (product_name === '') return alert('제목을 입력하세요');
     if (thumbnail === '') return alert('썸네일 사진을 등록하세요');
+    if (images.length === 0) return alert('첨부사진을 업로드하세요');
     if (description === '' && images.length === 0) return alert('본문에 들어갈 내용을 작성해주세요');
 
     if (brandChanged) {

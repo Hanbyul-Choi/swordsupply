@@ -77,6 +77,12 @@ function Card({product}: {product: Tables<'products'>}) {
         className="flex flex-col items-center gap-2">
         <div className="w-52 h-52 relative">
           <Image src={product.thumbnail ?? ''} alt="" fill sizes="100" style={{objectFit: 'cover'}} />
+          <div
+            className={`bg-[#fe5356] text-white absolute top-2 left-2 px-2 rounded-sm ${
+              product.best_seller || 'hidden'
+            }`}>
+            BEST
+          </div>
         </div>
         <p className="border-b-[1px] pb-1 w-full text-center">{product.product_name}</p>
         <PriceSection

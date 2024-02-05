@@ -34,7 +34,7 @@ function ProductList({defaultBrand, selectedBrand}: {defaultBrand: string; selec
 
   if (isLoading) {
     return (
-      <div className="absolute w-full h-full mx-auto flex justify-center items-center">
+      <div className="flex justify-center items-center h-[60vh]">
         <BarLoader color="#36d7b7" width={200} height={5} />
       </div>
     );

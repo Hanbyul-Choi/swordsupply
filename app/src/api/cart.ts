@@ -34,10 +34,10 @@ export const updateCart = async (newCarts: TablesInsert<'carts'>) => {
   }
 };
 
-export const orderCart = async (cart, price, orderDate, address) => {
+export const orderCart = async (cart, price, orderDate, address_id) => {
   const {data, error} = await supabase
     .from('carts')
-    .update({order_status: true, total_price: price, order_date: orderDate, address})
+    .update({order_status: true, total_price: price, order_date: orderDate, address_id})
     .eq('cart_id', cart.cart_id)
     .select();
   if (error) {
@@ -57,19 +57,19 @@ export const addAddress = async (address: TablesInsert<'address'>) => {
 export const getOrderList = async ({pageParam = 1}: any) => {
   const {count} = await supabase.from('carts').select('*', {count: 'exact', head: true}).eq('order_status', true);
 
-  const pageToFetch = pageParam * 9 + (pageParam - 1);
+  const pageToFetch = pageParam * 19 + (pageParam - 1);
 
   const {data, error} = await supabase
     .from('carts')
-    .select(`*,users(*)`)
+    .select(`*,address(*),users(*)`)
     .eq('order_status', true)
-    .range(pageToFetch - 9, pageToFetch)
+    .range(pageToFetch - 19, pageToFetch)
     .order('created_at', {ascending: false});
 
   if (error) {
     throw error;
   }
-  return {data, total_pages: Math.ceil((count ?? 0) / 10), page: pageParam, count};
+  return {data, total_pages: Math.ceil((count ?? 0) / 20), page: pageParam, count};
 };
 
 export const getOrders = async userId => {

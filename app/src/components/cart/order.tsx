@@ -121,7 +121,7 @@ function Order({totalPrice}) {
       user_id,
     };
 
-    const {id: address_id} = await addAddress(orderAddress);
+    const {address_id} = await addAddress(orderAddress);
     const data = await orderCart(cart, price, orderDate, address_id);
 
     if (data) {

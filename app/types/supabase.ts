@@ -33,28 +33,28 @@ export interface Database {
       address: {
         Row: {
           address: string;
+          address_id: string;
           created_at: string;
           detail_address: string | null;
           extra_address: string | null;
-          id: number;
           user_id: string;
           zonecode: string | null;
         };
         Insert: {
           address?: string;
+          address_id?: string;
           created_at?: string;
           detail_address?: string | null;
           extra_address?: string | null;
-          id?: number;
           user_id: string;
           zonecode?: string | null;
         };
         Update: {
           address?: string;
+          address_id?: string;
           created_at?: string;
           detail_address?: string | null;
           extra_address?: string | null;
-          id?: number;
           user_id?: string;
           zonecode?: string | null;
         };
@@ -88,7 +88,7 @@ export interface Database {
       };
       carts: {
         Row: {
-          address: number | null;
+          address_id: string | null;
           cart_id: string;
           cart_list: Json[];
           created_at: string;
@@ -98,7 +98,7 @@ export interface Database {
           user_id: string;
         };
         Insert: {
-          address?: number | null;
+          address_id?: string | null;
           cart_id?: string;
           cart_list?: Json[];
           created_at?: string;
@@ -108,7 +108,7 @@ export interface Database {
           user_id: string;
         };
         Update: {
-          address?: number | null;
+          address_id?: string | null;
           cart_id?: string;
           cart_list?: Json[];
           created_at?: string;
@@ -119,11 +119,11 @@ export interface Database {
         };
         Relationships: [
           {
-            foreignKeyName: 'carts_address_fkey';
-            columns: ['address'];
+            foreignKeyName: 'carts_address_id_fkey';
+            columns: ['address_id'];
             isOneToOne: false;
             referencedRelation: 'address';
-            referencedColumns: ['id'];
+            referencedColumns: ['address_id'];
           },
           {
             foreignKeyName: 'carts_user_id_fkey';
