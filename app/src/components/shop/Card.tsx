@@ -7,6 +7,7 @@ import Link from 'next/link';
 
 import {getCart, postCart, updateCart} from '../../api/cart';
 import useCartStore from '../../store/carts.store';
+import useSessionStore from '../../store/session.store';
 import {changeJson, isAlreadyCart} from '../../utils/common';
 import CountControl from '../common/CountControl';
 import {useCountControl} from '../common/useCountControl';
@@ -15,8 +16,9 @@ import PriceSection from '../PriceSection';
 import type {Option} from '../admin/post/useAddOption';
 import type {Tables} from '@/app/types/supabase';
 
-function Card({product, user_id}: {product: Tables<'products'>; user_id: string}) {
+function Card({product}: {product: Tables<'products'>}) {
   const {cart, setCart} = useCartStore();
+  const {session} = useSessionStore();
   const {count, onChangeCount, onClickMinus, onClickPlus} = useCountControl();
   const defaulteOption = product?.options !== null ? (product?.options[0] as Option) : null;
   const [curOption, setCurOption] = useState<null | string>(
@@ -27,10 +29,14 @@ function Card({product, user_id}: {product: Tables<'products'>; user_id: string}
   };
 
   const putInCart = async () => {
+    if (!session) {
+      return alert('로그인이 필요합니다.');
+    }
     if (isAlreadyCart(changeJson(cart?.cart_list), product.product_id, curOption)) {
       alert('이미 카트에 담겨있습니다.');
       return;
     }
+
     const form = {
       id: product.product_id,
       product_name: product.product_name,
@@ -38,8 +44,8 @@ function Card({product, user_id}: {product: Tables<'products'>; user_id: string}
       option: curOption,
     };
     if (!cart) {
-      await postCart({user_id, cart_list: [form]});
-      const {data} = await getCart(user_id);
+      await postCart({user_id: session.user_id, cart_list: [form]});
+      const {data} = await getCart(session.user_id);
       setCart(data);
     } else {
       const newCart = {...cart};

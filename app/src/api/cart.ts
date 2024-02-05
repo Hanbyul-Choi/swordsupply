@@ -10,11 +10,12 @@ export const getCart = async (user_id: string) => {
     .eq('user_id', user_id)
     .eq('order_status', false)
     .single();
+
   return {data: data, error};
 };
 
 export const postCart = async (newCarts: TablesInsert<'carts'>) => {
-  const {data, error} = await supabase.from('carts').insert(newCarts);
+  const {data, error} = await supabase.from('carts').insert(newCarts).select();
   if (error) {
     console.log(error);
     throw error;
@@ -33,14 +34,22 @@ export const updateCart = async (newCarts: TablesInsert<'carts'>) => {
   }
 };
 
-export const orderCart = async (cart, price, orderDate) => {
+export const orderCart = async (cart, price, orderDate, address) => {
   const {data, error} = await supabase
     .from('carts')
-    .update({order_status: true, total_price: price, order_date: orderDate})
+    .update({order_status: true, total_price: price, order_date: orderDate, address})
     .eq('cart_id', cart.cart_id)
     .select();
   if (error) {
     return error;
+  }
+  return data;
+};
+
+export const addAddress = async (address: TablesInsert<'address'>) => {
+  const {data, error} = await supabase.from('address').insert(address).select().single();
+  if (error) {
+    console.log(error);
   }
   return data;
 };

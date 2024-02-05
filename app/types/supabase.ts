@@ -30,6 +30,44 @@ export interface Database {
   };
   public: {
     Tables: {
+      address: {
+        Row: {
+          address: string;
+          created_at: string;
+          detail_address: string | null;
+          extra_address: string | null;
+          id: number;
+          user_id: string;
+          zonecode: string | null;
+        };
+        Insert: {
+          address?: string;
+          created_at?: string;
+          detail_address?: string | null;
+          extra_address?: string | null;
+          id?: number;
+          user_id: string;
+          zonecode?: string | null;
+        };
+        Update: {
+          address?: string;
+          created_at?: string;
+          detail_address?: string | null;
+          extra_address?: string | null;
+          id?: number;
+          user_id?: string;
+          zonecode?: string | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'address_user_id_fkey';
+            columns: ['user_id'];
+            isOneToOne: false;
+            referencedRelation: 'users';
+            referencedColumns: ['user_id'];
+          },
+        ];
+      };
       brand: {
         Row: {
           brands: string[];
@@ -50,6 +88,7 @@ export interface Database {
       };
       carts: {
         Row: {
+          address: number | null;
           cart_id: string;
           cart_list: Json[];
           created_at: string;
@@ -59,6 +98,7 @@ export interface Database {
           user_id: string;
         };
         Insert: {
+          address?: number | null;
           cart_id?: string;
           cart_list?: Json[];
           created_at?: string;
@@ -68,6 +108,7 @@ export interface Database {
           user_id: string;
         };
         Update: {
+          address?: number | null;
           cart_id?: string;
           cart_list?: Json[];
           created_at?: string;
@@ -77,6 +118,13 @@ export interface Database {
           user_id?: string;
         };
         Relationships: [
+          {
+            foreignKeyName: 'carts_address_fkey';
+            columns: ['address'];
+            isOneToOne: false;
+            referencedRelation: 'address';
+            referencedColumns: ['id'];
+          },
           {
             foreignKeyName: 'carts_user_id_fkey';
             columns: ['user_id'];

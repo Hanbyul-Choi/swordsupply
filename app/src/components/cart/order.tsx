@@ -1,11 +1,11 @@
 'use client';
 import type {ChangeEvent} from 'react';
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 
 import {useRouter} from 'next/navigation';
 
 import {userUpdate} from '../../api/auth';
-import {orderCart} from '../../api/cart';
+import {addAddress, orderCart} from '../../api/cart';
 import useCartStore from '../../store/carts.store';
 import useSessionStore from '../../store/session.store';
 import Postcode from '../order/PostCode';
@@ -16,19 +16,35 @@ function Order({totalPrice}) {
   const {cart, setCart} = useCartStore();
   const {session} = useSessionStore();
   const router = useRouter();
-  const [name, setName] = useState('');
-  const [phoneNumber, setPhoneNumber] = useState('');
+  const [name, setName] = useState(session.user_name || '');
+  const [phoneNumber, setPhoneNumber] = useState(session.phone || '');
   const [address, setAddress] = useState({
     address: session.address || '',
     zonecode: session.zonecode || '',
-    extraAddress: '',
-    detailAddress: session.address_detail || '',
+    extraAddress: session.address_detail?.split('*')[0] || '',
+    detailAddress: session.address_detail?.split('*')[1] || '',
   });
-
   const [saveAddress, setSaveAddress] = useState(true);
   const [checkPolicy, setCheckPolicy] = useState(false);
   const [errMsg, setErrMsg] = useState(false);
   const [policyMsg, setPolicyMsg] = useState(false);
+
+  const initInput = () => {
+    setName(session.user_name || '');
+    setPhoneNumber(session.phone || '');
+    setAddress({
+      address: session.address || '',
+      zonecode: session.zonecode || '',
+      extraAddress: session.address_detail?.split('*')[0] || '',
+      detailAddress: session.address_detail?.split('*')[1] || '',
+    });
+  };
+  useEffect(() => {
+    return () => {
+      initInput();
+    };
+  }, []);
+
   const changeNameHandler = (event: ChangeEvent<HTMLInputElement>) => {
     setName(event.target.value);
   };
@@ -74,35 +90,49 @@ function Order({totalPrice}) {
     }
 
     const {user_id} = session;
+    let updatedUser: TablesUpdate<'users'> = {};
     if (saveAddress) {
-      const updatedUser: TablesUpdate<'users'> = {
+      updatedUser = {
         address: address.address,
-        address_detail: address.extraAddress + ' ' + address.detailAddress,
+        address_detail: address.extraAddress + '*' + address.detailAddress,
         phone: phoneNumber,
         user_name: name,
         zonecode: address.zonecode,
       };
-      const data = await userUpdate(user_id, updatedUser);
-      if (!data) return;
+    } else {
+      updatedUser = {
+        phone: phoneNumber,
+        user_name: name,
+      };
     }
+    const updatedData = await userUpdate(user_id, updatedUser);
+    if (!updatedData) return;
 
-    // 아래 함수를 만들어서 주문 요청을 완료부탁드립니다.
-    // cart api에 함수 이름만 만들어놓음
     let today = new Date();
     const orderDate = `${today.getFullYear()}.${
       today.getMonth() + 1
     }.${today.getDate()}/${today.getHours()}:${today.getMinutes()}:${today.getSeconds()}`;
     const price = Number(totalPrice) <= 100000 ? totalPrice + 3000 : totalPrice;
-    const data = await orderCart(cart, price, orderDate);
+    const orderAddress = {
+      address: address.address,
+      extra_address: address.extraAddress,
+      detail_address: address.detailAddress,
+      zonecode: address.zonecode,
+      user_id,
+    };
+
+    const {id: address_id} = await addAddress(orderAddress);
+    const data = await orderCart(cart, price, orderDate, address_id);
 
     if (data) {
       setCart(null);
     } else {
-      alert('주문에 실패했습니다');
+      alert('오류가 발생했습니다. 잠시 후 다시 시도해주세요.');
       location.reload();
     }
 
     alert('주문이 완료되었습니다.');
+    initInput();
     router.push('/cart/order');
   };
 

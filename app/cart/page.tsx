@@ -20,6 +20,7 @@ function Page() {
   const [totalPrice, setTotalPrice] = useState(0);
   const [totalCount, setTotalCount] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
+  const [isNull, setIsNull] = useState(false);
   const [isOrder, setIsOrder] = useState(false);
   const fetchData = useCallback(async () => {
     if (cart && cart.cart_list.length > 0 && products.length === 0) {
@@ -40,16 +41,22 @@ function Page() {
 
   useEffect(() => {
     const fetchCart = async id => {
-      const {data} = await getCart(id);
+      const {data, error} = await getCart(id);
       if (data) {
         setCart(data);
       }
+      if (error) {
+        setIsNull(true);
+      }
+      setIsLoading(false);
     };
     if (!cart && session) {
       fetchCart(session.user_id);
+      setIsLoading(false);
+      return;
     }
     setIsLoading(false);
-  });
+  }, [cart, session]);
 
   useEffect(() => {
     fetchData();
@@ -106,7 +113,15 @@ function Page() {
     [cart, setCart],
   );
 
-  if (cart?.cart_list?.length === 0) {
+  if (isLoading) {
+    return (
+      <div className="flex justify-center items-center h-[60vh]">
+        <BarLoader color="#36d7b7" width={200} height={5} />
+      </div>
+    );
+  }
+
+  if (isNull || cart?.cart_list.length === 0) {
     return (
       <div className="w-full flex flex-col items-center justify-center mt-24 gap-12">
         <p className="text-2xl">현재 쇼핑카트가 비었습니다.</p>
@@ -115,14 +130,6 @@ function Page() {
         <Link href={'/shop'} className="border-2 p-2 border-black hover:bg-black hover:text-white">
           -{'>'} SHOP으로 이동
         </Link>
-      </div>
-    );
-  }
-
-  if (isLoading) {
-    return (
-      <div className="flex justify-center items-center h-[60vh]">
-        <BarLoader color="#36d7b7" width={200} height={5} />
       </div>
     );
   }
@@ -164,9 +171,7 @@ function Page() {
             </div>
           </div>
           {isOrder && <Order totalPrice={totalPrice} />}
-          <button
-            onClick={() => setIsOrder(!isOrder)}
-            className="mx-auto bg-black text-white text-xl p-2 px-8 hover:opacity-75">
+          <button onClick={openOrder} className="mx-auto bg-black text-white text-xl p-2 px-8 hover:opacity-75">
             {isOrder ? '취소하기' : '주문하기'}
           </button>
         </>

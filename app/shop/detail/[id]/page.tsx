@@ -50,6 +50,9 @@ function Page({params: {id}, searchParams: {brand}}: {params: {id: string}; sear
   };
 
   const putInCart = async () => {
+    if (!session) {
+      return alert('로그인이 필요합니다.');
+    }
     const {user_id} = session;
     if (isAlreadyCart(changeJson(cart?.cart_list), product.product_id, curOption)) {
       alert('이미 카트에 담겨있습니다.');
