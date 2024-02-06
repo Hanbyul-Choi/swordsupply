@@ -72,7 +72,7 @@ export const getOrderList = async ({pageParam = 1}: any) => {
   return {data, total_pages: Math.ceil((count ?? 0) / 20), page: pageParam, count};
 };
 
-export const getOrders = async userId => {
+export const getOrders = async (userId: string) => {
   const {data, error} = await supabase
     .from('carts')
     .select('*')
@@ -83,4 +83,11 @@ export const getOrders = async userId => {
     console.log(error);
   }
   return data;
+};
+
+export const deleteOrder = async (cart_id: string) => {
+  const {error} = await supabase.from('carts').delete().eq('cart_id', cart_id);
+  if (error) {
+    console.log(error);
+  }
 };

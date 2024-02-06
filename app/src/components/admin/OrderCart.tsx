@@ -8,9 +8,10 @@ import type {Tables} from '@/app/types/supabase';
 interface Props {
   order: Tables<'carts'> & {users: Tables<'users'>} & {address: Tables<'address'>};
   index: number;
+  clickDeleteOrder: (cart_id: string) => void;
 }
 
-function OrderCart({order, index}: Props) {
+function OrderCart({order, index, clickDeleteOrder}: Props) {
   const {users, address} = order;
   const [showAddress, setShowAddress] = useState(false);
   return (
@@ -58,10 +59,12 @@ function OrderCart({order, index}: Props) {
           ))}
         </td>
         <td className="">{addCommas(order.total_price)}원</td>
-
         <td className="">
           <p>{order.order_date?.split('/')[0]}</p>
           <p>({order.order_date?.split('/')[1]})</p>
+        </td>
+        <td className="">
+          <button onClick={() => clickDeleteOrder(order.cart_id)}>삭제</button>
         </td>
       </tr>
     </tbody>

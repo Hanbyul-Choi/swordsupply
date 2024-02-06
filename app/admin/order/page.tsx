@@ -1,19 +1,19 @@
 'use client';
 import React, {useEffect} from 'react';
 
-import {useInfiniteQuery} from '@tanstack/react-query';
+import {useInfiniteQuery, useQueryClient} from '@tanstack/react-query';
 import {useRouter} from 'next/navigation';
 import {useInView} from 'react-intersection-observer';
 import {BarLoader} from 'react-spinners';
 
-import {getOrderList} from '@/app/src/api/cart';
+import {deleteOrder, getOrderList} from '@/app/src/api/cart';
 import OrderCart from '@/app/src/components/admin/OrderCart';
 import useSessionStore from '@/app/src/store/session.store';
 
 function Page() {
   const {session, isLoaded} = useSessionStore();
   const router = useRouter();
-
+  const queryClient = useQueryClient();
   const {data, fetchNextPage, hasNextPage, isFetchingNextPage, isLoading} = useInfiniteQuery({
     queryKey: ['order_list'],
     queryFn: getOrderList,
@@ -25,6 +25,13 @@ function Page() {
     },
   });
 
+  const clickDeleteOrder = async (cart_id: string) => {
+    if (confirm('주문을 삭제하시겠습니까?')) {
+      await deleteOrder(cart_id);
+      await queryClient.invalidateQueries({queryKey: ['order_list']});
+      alert('주문이 삭제되었습니다.');
+    }
+  };
   const order_list = data?.pages?.map(pageData => pageData.data).flat();
 
   const {ref} = useInView({
@@ -71,10 +78,11 @@ function Page() {
                     </th>
                     <th className="w-40 text-center">주문총액</th>
                     <th className="w-32 text-center">주문날짜</th>
+                    <th className="w-12"></th>
                   </tr>
                 </thead>
                 {order_list.map((order, index) => (
-                  <OrderCart order={order} index={index} key={index} />
+                  <OrderCart order={order} index={index} key={index} clickDeleteOrder={clickDeleteOrder} />
                 ))}
               </table>
               {hasNextPage && (
