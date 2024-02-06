@@ -6,7 +6,7 @@ import Link from 'next/link';
 export default function Page() {
   return (
     <>
-      <div className="max-w-[1280px] mx-automt-12 text-center p-4">
+      <div className="max-w-[1280px] mx-auto mt-12 text-center p-4">
         <div className="w-full p-4 bg-black text-white ">
           <p className="text-2xl sm:text-3xl p-6 border-b mb-4">주문이 완료되었습니다.</p>
           <p className="break-keep max-w-80 mx-auto">

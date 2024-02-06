@@ -14,8 +14,8 @@ function Page() {
             <p className="text-2xl font-extrabold text-white text-center">SWORD SUPPLY</p>
           </div>
           <div className="flex flex-col gap-2 text-white text-xl sm:text-2xl break-keep">
-            <p> 합리적이고 가성비적인 가격, </p>
-            <p> 최고의 품질,</p>
+            <p>합리적이고 가성비적인 가격,</p>
+            <p>최고의 품질,</p>
             <p>그리고 신뢰 및 존중</p>
           </div>
         </div>

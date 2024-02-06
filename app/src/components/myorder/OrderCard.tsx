@@ -6,10 +6,6 @@ import {addCommas} from '../../utils/common';
 export default function OrderCard({data}) {
   const {cart_list, order_date, total_price} = data;
   const [isDetail, setIsDetail] = useState(false);
-  // useEffect(() => {});
-  // const totalCount = cart_list.reduce((acc, cur) => {
-  //   return acc + Number(cur.count);
-  // }, 0);
 
   return (
     <div className="w-full flex flex-col gap-4 border border-black p-4">
