@@ -3,7 +3,7 @@ import {useRef, useState} from 'react';
 
 import {useQueryClient} from '@tanstack/react-query';
 
-import {updateBrands} from '../../api/admin';
+import {deleteBrandProduct, updateBrands} from '../../api/admin';
 
 import type {InputRef} from 'antd';
 
@@ -43,7 +43,7 @@ export const useBrandSelect = (brand: string[], defaultBrand?: string) => {
     setSelectedBrand(value);
   };
 
-  const deleteItem = async (e: MouseEvent<HTMLElement>, index: number) => {
+  const deleteItem = async (e: MouseEvent<HTMLElement>, index: number, item: string) => {
     e.stopPropagation();
     e.preventDefault();
     const check = confirm(
@@ -53,6 +53,7 @@ export const useBrandSelect = (brand: string[], defaultBrand?: string) => {
       const updated = [...items];
       updated.splice(index, 1);
       setItems(updated);
+      await deleteBrandProduct(item);
       await updateBrands(updated);
       queryClient.refetchQueries({queryKey: ['brands']});
     }

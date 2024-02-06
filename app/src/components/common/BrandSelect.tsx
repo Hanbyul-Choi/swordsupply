@@ -11,7 +11,7 @@ const {Option} = Select;
 
 interface Props {
   addItem: (e: MouseEvent<HTMLButtonElement | HTMLAnchorElement>) => void;
-  deleteItem: (e: MouseEvent<HTMLElement>, index: number) => void;
+  deleteItem: (e: MouseEvent<HTMLElement>, index: number, item: string) => void;
   onNameChange: (event: ChangeEvent<HTMLInputElement>) => void;
   handleChange: (value: string) => void;
   name: string;
@@ -56,7 +56,7 @@ const BrandSelect = ({brandProps, curOpt}: {brandProps: Props; curOpt?: string})
               alignItems: 'center',
             }}>
             <div>{item}</div>
-            <Button onClick={e => deleteItem(e, index)} danger size="small">
+            <Button onClick={e => deleteItem(e, index, item)} danger size="small">
               삭제
             </Button>
           </div>

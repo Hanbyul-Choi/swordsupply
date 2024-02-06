@@ -72,3 +72,11 @@ export const updateBestSeller = async (id: string, best_seller: boolean) => {
   }
   return data;
 };
+
+export const deleteBrandProduct = async brand => {
+  const {data, error} = await supabase.from('products').update({status: 'disabled'}).eq('brand', brand).select();
+  if (error) {
+    console.log(error);
+  }
+  return data;
+};
