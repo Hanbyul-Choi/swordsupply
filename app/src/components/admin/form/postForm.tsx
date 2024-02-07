@@ -183,14 +183,6 @@ function PostForm() {
             <UploadBox images={images} />
           </div>
         </div>
-        <div className="w-full text-start my-4">
-          <p>설명 이미지</p>
-        </div>
-        <div className="w-full">
-          <div className="max-w-[30rem]">
-            <UploadBox images={desc_image} />
-          </div>
-        </div>
         <div className="flex gap-10">
           <button
             type="button"

@@ -5,7 +5,6 @@ import 'react-responsive-carousel/lib/styles/carousel.min.css';
 import {useQuery, useQueryClient} from '@tanstack/react-query';
 import {Breadcrumb, Select} from 'antd';
 import Link from 'next/link';
-import {Carousel} from 'react-responsive-carousel';
 import {BarLoader} from 'react-spinners';
 
 import {getCart, postCart, updateCart} from '@/app/src/api/cart';
@@ -124,14 +123,8 @@ function Page({params: {id}, searchParams: {brand}}: {params: {id: string}; sear
         />
       </div>
       <div className="flex flex-col justify-center gap-8 w-full md:flex-row">
-        <div className="w-full md:w-1/2">
-          <Carousel showArrows={false} showStatus={false} infiniteLoop emulateTouch thumbWidth={70}>
-            {product.images?.map((img, i) => (
-              <div key={i}>
-                <img src={img} alt="제품 사진" style={{width: '100%', objectFit: 'cover', aspectRatio: '1/1'}} />
-              </div>
-            ))}
-          </Carousel>
+        <div className="w-full md:w-1/2 p-4">
+          <img src={product.thumbnail} alt="제품 사진" style={{width: '100%', objectFit: 'cover'}} />
         </div>
         <article className="space-y-8 w-full md:w-1/2">
           <div className="border-b-2 pb-3 space-y-2">
@@ -226,11 +219,16 @@ function Page({params: {id}, searchParams: {brand}}: {params: {id: string}; sear
       </div>
       <div className="mt-20 p-4 text-center w-full border-t-2">
         <h3 className="text-lg my-10">제품설명</h3>
-        <textarea className="w-full text-center h-auto resize-none overflow-hidden p-4 bg-white" disabled>
-          {product.description}
-        </textarea>
-        <div className="p-12">
-          {product.desc_image?.map((img, i) => {
+        <p className="p-3">
+          {product.description.split('\n').map((text, i) => (
+            <React.Fragment key={i}>
+              {text}
+              <br />
+            </React.Fragment>
+          ))}
+        </p>
+        <div className="p-12 space-y-10">
+          {product.images?.map((img, i) => {
             return (
               <div key={i}>
                 <img src={img} alt="제품 사진" style={{width: '100%', objectFit: 'cover'}} />

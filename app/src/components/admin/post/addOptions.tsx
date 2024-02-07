@@ -46,11 +46,9 @@ function AddOptions({options, handleInputChange, handleAddOption, handleRemoveOp
           )}
         </div>
       ))}
-      {options.length < 3 && (
-        <button type="button" className="border-[1px] px-4 p-1 w-fit rounded-md" onClick={handleAddOption}>
-          옵션 추가
-        </button>
-      )}
+      <button type="button" className="border-[1px] px-4 p-1 w-fit rounded-md" onClick={handleAddOption}>
+        옵션 추가
+      </button>
     </div>
   );
 }
