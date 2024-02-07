@@ -2,7 +2,7 @@ import type {Option} from '../src/components/admin/post/useAddOption';
 
 export type Json = string | number | boolean | null | {[key: string]: Json | undefined} | Json[] | Option;
 
-export interface Database {
+export type Database = {
   graphql_public: {
     Tables: {
       [_ in never]: never;
@@ -139,6 +139,7 @@ export interface Database {
           best_seller: boolean;
           brand: string;
           created_at: string;
+          desc_image: string[] | null;
           description: string | null;
           event_price: string;
           images: string[] | null;
@@ -153,6 +154,7 @@ export interface Database {
           best_seller?: boolean;
           brand?: string;
           created_at?: string;
+          desc_image?: string[] | null;
           description?: string | null;
           event_price?: string;
           images?: string[] | null;
@@ -167,6 +169,7 @@ export interface Database {
           best_seller?: boolean;
           brand?: string;
           created_at?: string;
+          desc_image?: string[] | null;
           description?: string | null;
           event_price?: string;
           images?: string[] | null;
@@ -419,7 +422,7 @@ export interface Database {
       [_ in never]: never;
     };
   };
-}
+};
 
 export type Tables<
   PublicTableNameOrOptions extends

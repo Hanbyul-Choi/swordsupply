@@ -28,6 +28,7 @@ function PostForm() {
   const [origin_price, setOrigin_price] = useState('');
   const [thumbnail, setThumbnail] = useState('');
   const images: string[] = [];
+  const desc_image: string[] = [];
 
   const {options, handleAddOption, handleInputChange, handleRemoveOption, initOptions} = useAddOption();
 
@@ -83,6 +84,7 @@ function PostForm() {
       description,
       thumbnail,
       images,
+      desc_image,
       brand: selectedBrand,
       options: optionsCheck ? options : [],
       origin_price: optionsCheck ? '' : origin_price,
@@ -98,7 +100,7 @@ function PostForm() {
   };
 
   return (
-    <div className="w-full flex flex-col items-center p-8 text-sm shadow-[1px_4px_7px_0_rgba(53,60,73,0.4)]">
+    <div className="w-full flex flex-col items-center p-8 text-sm shadow-[1px_4px_7px_0_rgba(53,60,73,0.4)] overflow-y-scroll h-[80vh]">
       <p className="text-3xl">상품 추가</p>
       <form className="flex flex-col items-center" onSubmit={onSubmit}>
         <div className="flex flex-col">
@@ -173,12 +175,20 @@ function PostForm() {
         </div>
         <div className="w-full text-start my-4">
           <p>
-            첨부 사진 <span className="text-slate-500">(MAX : 5장)</span>
+            제품 사진<span className="text-red-500">*</span>
           </p>
         </div>
         <div className="w-full">
           <div className="max-w-[30rem]">
             <UploadBox images={images} />
+          </div>
+        </div>
+        <div className="w-full text-start my-4">
+          <p>설명 이미지</p>
+        </div>
+        <div className="w-full">
+          <div className="max-w-[30rem]">
+            <UploadBox images={desc_image} />
           </div>
         </div>
         <div className="flex gap-10">

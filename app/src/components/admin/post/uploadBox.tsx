@@ -87,10 +87,9 @@ export function UploadBox({images}: {images: string[]}) {
         onPreview={handlePreview}
         onChange={handleChange}
         multiple
-        maxCount={5}
         accept="image/*"
         beforeUpload={beforeUpload}>
-        {fileList.length >= 10 ? null : uploadButton}
+        {uploadButton}
       </Upload>
       <Modal open={previewOpen} title={previewTitle} footer={null} onCancel={handleCancel}>
         <img alt="example" style={{width: '100%'}} src={previewImage} />

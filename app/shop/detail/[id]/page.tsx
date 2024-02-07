@@ -102,6 +102,7 @@ function Page({params: {id}, searchParams: {brand}}: {params: {id: string}; sear
       statusMsg = '입고 예정';
       break;
   }
+
   return (
     <div className="mt-4 max-w-[1080px] mx-auto flex flex-col items-center p-8">
       <div className="w-full mb-12">
@@ -146,22 +147,6 @@ function Page({params: {id}, searchParams: {brand}}: {params: {id: string}; sear
             <p className="text-sm">
               <span className="font-semibold">배송비</span> 3,000원 (100,000원 이상 구매 시 무료배송)
             </p>
-            {/* <p className="text-sm">
-              <span className="font-semibold">구매혜택</span>{' '}
-              {addCommas(
-                Number(
-                  (
-                    product.event_price ||
-                    product.origin_price ||
-                    findPrice('event_price', curOption, product.options as Option[]) ||
-                    findPrice('origin_price', curOption, product.options as Option[])
-                  ).replaceAll(',', ''),
-                ) *
-                  Number(count) *
-                  0.1,
-              )}
-              point 적립 예정
-            </p> */}
           </div>
           <div className="bg-[#f9f9f9] p-4">
             {product.options?.length !== 0 && (
@@ -241,7 +226,18 @@ function Page({params: {id}, searchParams: {brand}}: {params: {id: string}; sear
       </div>
       <div className="mt-20 p-4 text-center w-full border-t-2">
         <h3 className="text-lg my-10">제품설명</h3>
-        <p>{product.description}</p>
+        <textarea className="w-full text-center h-auto resize-none overflow-hidden p-4 bg-white" disabled>
+          {product.description}
+        </textarea>
+        <div className="p-12">
+          {product.desc_image?.map((img, i) => {
+            return (
+              <div key={i}>
+                <img src={img} alt="제품 사진" style={{width: '100%', objectFit: 'cover'}} />
+              </div>
+            );
+          })}
+        </div>
       </div>
     </div>
   );

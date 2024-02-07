@@ -31,6 +31,7 @@ function EditForm({product}: {product: Tables<'products'>}) {
   const [origin_price, setOrigin_price] = useState(product.origin_price);
   const [thumbnail, setThumbnail] = useState(product.thumbnail ?? '');
   const images: string[] = product.images || [];
+  const desc_image: string[] = product.desc_image || [];
 
   const {options, handleAddOption, handleInputChange, handleRemoveOption} = useAddOption(product.options as Option[]);
 
@@ -86,6 +87,7 @@ function EditForm({product}: {product: Tables<'products'>}) {
       description,
       thumbnail,
       images,
+      desc_image,
       brand: selectedBrand,
       options: optionsCheck ? options : [],
       origin_price: optionsCheck ? '' : origin_price,
@@ -100,7 +102,7 @@ function EditForm({product}: {product: Tables<'products'>}) {
   };
 
   return (
-    <div className="w-full flex flex-col items-center p-8 overflow-y-scroll text-sm shadow-[1px_4px_7px_0_rgba(53,60,73,0.4)]">
+    <div className="w-full flex flex-col items-center p-8 overflow-y-scroll h-[80vh] text-sm shadow-[1px_4px_7px_0_rgba(53,60,73,0.4)]">
       <p className="text-3xl">상품 수정</p>
       <form className="flex flex-col items-center" onSubmit={onSubmit}>
         <div className="flex flex-col">
@@ -173,12 +175,20 @@ function EditForm({product}: {product: Tables<'products'>}) {
         </div>
         <div className="w-full text-start my-4">
           <p>
-            첨부 사진 <span className="text-slate-500">(MAX : 5장)</span>
+            제품 사진<span className="text-red-500">*</span>
           </p>
         </div>
         <div className="w-full">
           <div className="max-w-[30rem]">
             <UploadBox images={images} />
+          </div>
+        </div>
+        <div className="w-full text-start my-4">
+          <p>설명 이미지</p>
+        </div>
+        <div className="w-full">
+          <div className="max-w-[30rem]">
+            <UploadBox images={desc_image} />
           </div>
         </div>
         <div className="flex gap-4 w-1/2">
