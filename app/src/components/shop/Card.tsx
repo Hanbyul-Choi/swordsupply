@@ -97,7 +97,7 @@ function Card({product}: {product: Tables<'products'>}) {
         {product.options?.length !== 0 && product.options && (
           <Select
             defaultValue={defaulteOption?.option_name}
-            style={{width: '100%', height: '2rem', textAlign: 'center'}}
+            style={{width: '50%', height: '2rem', textAlign: 'center'}}
             onChange={handleChange}
             options={product.options?.map(option => {
               const newOpt = option as Option;
