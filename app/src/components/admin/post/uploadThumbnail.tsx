@@ -2,8 +2,19 @@ import type {Dispatch, SetStateAction} from 'react';
 import React from 'react';
 
 import {UploadOutlined} from '@ant-design/icons';
-import {Button, Upload} from 'antd';
+import {Button, message, Upload} from 'antd';
 import {v4} from 'uuid';
+
+const beforeUpload = (file: File): Promise<string> => {
+  return new Promise((resolve, reject) => {
+    if (file.size > 2 * 1024 * 1024) {
+      reject('2MB 미만의 사진만 업로드가 가능합니다.');
+      message.error('2MB 미만의 사진만 업로드가 가능합니다.');
+    } else {
+      resolve('Success');
+    }
+  });
+};
 
 import {getPostImgUrl, uploadImg} from '@/app/src/api/admin';
 
@@ -29,6 +40,7 @@ function UploadThumbnail({
       customRequest={handleFileUpload}
       listType="picture"
       maxCount={1}
+      beforeUpload={beforeUpload}
       accept="image/*"
       defaultFileList={
         defaultImg

@@ -30,7 +30,7 @@ function EditForm({product}: {product: Tables<'products'>}) {
   const [event_price, setEvent_price] = useState(product.event_price);
   const [origin_price, setOrigin_price] = useState(product.origin_price);
   const [thumbnail, setThumbnail] = useState(product.thumbnail ?? '');
-  const images: string[] = product.images || [];
+  const [images, setImages] = useState(product.images || []);
   const desc_image: string[] = product.desc_image || [];
 
   const {options, handleAddOption, handleInputChange, handleRemoveOption} = useAddOption(product.options as Option[]);
@@ -93,6 +93,7 @@ function EditForm({product}: {product: Tables<'products'>}) {
       origin_price: optionsCheck ? '' : origin_price,
       event_price: optionsCheck ? '' : event_price,
     };
+    console.log(newPost.images);
     const data = await updateProducts(newPost, product.product_id);
     if (data) {
       queryClient.refetchQueries({queryKey: [product.brand]});
@@ -180,7 +181,7 @@ function EditForm({product}: {product: Tables<'products'>}) {
         </div>
         <div className="w-full">
           <div className="max-w-[30rem]">
-            <UploadBox images={images} />
+            <UploadBox images={images} setImages={setImages} />
           </div>
         </div>
         <div className="flex gap-4 w-1/2">

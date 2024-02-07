@@ -3,7 +3,7 @@
 import React, {useState} from 'react';
 
 import {PlusOutlined} from '@ant-design/icons';
-import {message, Modal, Upload} from 'antd';
+import {Modal, Upload} from 'antd';
 import {v4} from 'uuid';
 
 import {getPostImgUrl, uploadImg} from '@/app/src/api/admin';
@@ -21,18 +21,7 @@ const getBase64 = (file: RcFile): Promise<string> =>
     };
   });
 
-const beforeUpload = (file: File): Promise<string> => {
-  return new Promise((resolve, reject) => {
-    if (file.size > 2 * 1024 * 1024) {
-      reject('2MB 미만의 사진만 업로드가 가능합니다.');
-      message.error('2MB 미만의 사진만 업로드가 가능합니다.');
-    } else {
-      resolve('Success');
-    }
-  });
-};
-
-export function UploadBox({images}: {images: string[]}) {
+export function UploadBox({images, setImages}: {images: string[]; setImages: any}) {
   const [previewOpen, setPreviewOpen] = useState(false);
   const [previewImage, setPreviewImage] = useState('');
   const [previewTitle, setPreviewTitle] = useState('');
@@ -64,9 +53,11 @@ export function UploadBox({images}: {images: string[]}) {
       imgName,
       imgFile: file,
     };
-    await uploadImg(img);
-    onSuccess();
-    images.push(getPostImgUrl(imgName));
+    if (file) {
+      await uploadImg(img);
+      onSuccess();
+      images.push(getPostImgUrl(imgName));
+    }
   };
 
   const handleChange: UploadProps['onChange'] = ({fileList: newFileList}) => setFileList(newFileList);
@@ -86,9 +77,11 @@ export function UploadBox({images}: {images: string[]}) {
         fileList={fileList}
         onPreview={handlePreview}
         onChange={handleChange}
+        onRemove={(file: UploadFile) => {
+          setImages(images.filter(url => url !== file.url));
+        }}
         multiple
-        accept="image/*"
-        beforeUpload={beforeUpload}>
+        accept="image/*">
         {uploadButton}
       </Upload>
       <Modal open={previewOpen} title={previewTitle} footer={null} onCancel={handleCancel}>

@@ -27,7 +27,7 @@ function PostForm() {
   const [event_price, setEvent_price] = useState('');
   const [origin_price, setOrigin_price] = useState('');
   const [thumbnail, setThumbnail] = useState('');
-  const images: string[] = [];
+  const [images, setImages] = useState([]);
   const desc_image: string[] = [];
 
   const {options, handleAddOption, handleInputChange, handleRemoveOption, initOptions} = useAddOption();
@@ -180,7 +180,7 @@ function PostForm() {
         </div>
         <div className="w-full">
           <div className="max-w-[30rem]">
-            <UploadBox images={images} />
+            <UploadBox images={images} setImages={setImages} />
           </div>
         </div>
         <div className="flex gap-10">
