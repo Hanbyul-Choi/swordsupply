@@ -49,3 +49,8 @@ input[type='number'] {
   text-align: center;
   width: fit-content;
 }
+
+.ant-select-selection-search {
+  font-size: 1rem;
+  width: fit-content;
+}

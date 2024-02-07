@@ -225,7 +225,7 @@ function Page({params: {id}, searchParams: {brand}}: {params: {id: string}; sear
             </React.Fragment>
           ))}
         </p>
-        <div className="p-12 space-y-10">
+        <div className="p-12 sm:w-2/3 space-y-10 mx-auto">
           {product.images?.map((img, i) => {
             return (
               <div key={i}>
