@@ -12,12 +12,16 @@ export default function Page() {
           <p className="break-keep max-w-80 mx-auto">
             하단의 카톡아이디로 주문자 성함과 전화번호를 알려주시면 빠르게 결제 안내 도와드리겠습니다.
           </p>
-          <Link href={'www.kakao.com'} className="flex justify-center items-center gap-4 mt-4">
+          <a
+            rel="noopener noreferrer"
+            href={'https://prfl.link/@sword'}
+            target="_blank"
+            className="flex justify-center items-center gap-4 mt-4">
             <div className="mt-2 p-1 bg-[#FFEB3B] rounded-lg w-12 h-12 relative">
               <Image src={'/kakao.svg'} width={0} height={0} sizes="100" style={{width: '100%'}} alt={`kakao login`} />
             </div>
             <p className="text-xl text-[#FFEB3B]">카카오톡 대화하기</p>
-          </Link>
+          </a>
           <div className="flex gap-4 justify-evenly mx-auto md:w-1/2 mt-14">
             <Link href={`/shop`} className="border px-4 p-2">
               <p>계속둘러보기</p>

@@ -113,7 +113,7 @@ function ListCard({product, index}: {product: Tables<'products'>; index: number}
             onOpenChange={handleOpenChangeStatus}
             dropdownRender={() => (
               <div style={contentStyle} className="flex flex-col overflow-hidden">
-                <button onClick={() => clickStatusHandler('Available')} className="p-2 hover:bg-slate-200">
+                <button onClick={() => clickStatusHandler('available')} className="p-2 hover:bg-slate-200">
                   판매중
                 </button>
                 <button onClick={() => clickStatusHandler('SoldOut')} className="p-2 hover:bg-slate-200">

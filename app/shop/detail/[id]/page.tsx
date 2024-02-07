@@ -211,9 +211,7 @@ function Page({params: {id}, searchParams: {brand}}: {params: {id: string}; sear
           </div>
           <div>
             <p>환불정책</p>
-            <p className="text-sm text-slate-500 mt-2">
-              모든 제품은 미국 본사에서 직접 배송되는 상품으로 반품 및 교환이 불가합니다
-            </p>
+            <p className="text-sm text-slate-500 mt-2">모든 제품은 출고 시 반품 및 교환이 불가합니다.</p>
           </div>
         </article>
       </div>
