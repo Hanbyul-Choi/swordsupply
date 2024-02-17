@@ -5,7 +5,7 @@ import Image from 'next/image';
 function GuideSection() {
   return (
     <div className="w-full break-keep bg-slate-100">
-      <div className="sm:max-w-[1280px] mx-auto p-16 flex flex-col min-[900px]:flex-row items-center justify-center gap-8">
+      <div className="sm:max-w-[1280px] mx-auto  p-16 flex flex-col min-[900px]:flex-row items-center justify-center gap-8">
         <div className="p-4 w-full min-[900px]:w-1/3">
           <div className="w-full relative border-2 border-black aspect-square bg-white">
             <Image
