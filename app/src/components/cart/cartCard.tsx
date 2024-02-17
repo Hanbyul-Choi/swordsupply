@@ -4,6 +4,7 @@ import React, {useEffect, useState} from 'react';
 import {Select} from 'antd';
 import Image from 'next/image';
 
+import {STATUS_MSG} from '../../constants/text';
 import useCartStore from '../../store/carts.store';
 import {addCommas, changeJson, findPrice, isAlreadyCart} from '../../utils/common';
 import CountControl from '../common/CountControl';
@@ -18,9 +19,10 @@ interface CardProps {
   product: Tables<'products'>;
   cart_info: idsI;
   removeItem: (cart_id: string, option: string) => void;
+  changeCheckStatus: (status: boolean) => void;
 }
 
-function CartCard({product, cart_info, removeItem}: CardProps) {
+function CartCard({product, cart_info, changeCheckStatus, removeItem}: CardProps) {
   const {count, onChangeCount, onClickMinus, onClickPlus, resetCount} = useCountControl(cart_info?.count);
   const [curOption, setCurOption] = useState<null | string>(cart_info?.option);
   const {cart, setCart} = useCartStore();
@@ -78,11 +80,24 @@ function CartCard({product, cart_info, removeItem}: CardProps) {
                 <div className="w-full h-8 ">
                   <Select
                     value={curOption}
-                    style={{width: '100%', textAlign: 'center', height: '100%'}}
+                    style={{width: '100%', minWidth: '120px', textAlign: 'center', height: '100%'}}
                     onChange={handleChange}
                     options={product.options?.map(option => {
                       const newOpt = option as Option;
-                      return {value: newOpt.option_name, label: newOpt.option_name, filterOption: 'a'};
+                      if (curOption === newOpt.option_name) {
+                        if (newOpt.status !== 'available') {
+                          changeCheckStatus(false);
+                        }
+                      }
+                      return {
+                        value: newOpt.option_name,
+                        label:
+                          newOpt.status === 'available'
+                            ? newOpt.option_name
+                            : newOpt.option_name + `(${STATUS_MSG[newOpt.status]})`,
+                        disabled: newOpt.status !== 'available',
+                        filterOption: 'a',
+                      };
                     })}
                   />
                 </div>

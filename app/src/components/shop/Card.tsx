@@ -6,6 +6,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 
 import {getCart, postCart, updateCart} from '../../api/cart';
+import {STATUS_MSG} from '../../constants/text';
 import useCartStore from '../../store/carts.store';
 import useSessionStore from '../../store/session.store';
 import {changeJson, isAlreadyCart} from '../../utils/common';
@@ -43,6 +44,12 @@ function Card({product}: {product: Tables<'products'>}) {
       count,
       option: curOption,
     };
+
+    const curOptionStatus = (product.options as Option[]).find(option => option.option_name === curOption).status;
+    //선택된 옵션 상태가 available이 아닌 것은 얼리리턴으로 예외처리
+    if (curOptionStatus !== 'available') {
+      return alert(`현재 ${STATUS_MSG[curOptionStatus]}인 상품입니다. `);
+    }
     if (!cart) {
       await postCart({user_id: session.user_id, cart_list: [form]});
       const {data} = await getCart(session.user_id);
@@ -101,7 +108,14 @@ function Card({product}: {product: Tables<'products'>}) {
             onChange={handleChange}
             options={product.options?.map(option => {
               const newOpt = option as Option;
-              return {value: newOpt.option_name, label: newOpt.option_name};
+              return {
+                value: newOpt.option_name,
+                label:
+                  newOpt.status === 'available'
+                    ? newOpt.option_name
+                    : newOpt.option_name + `(${STATUS_MSG[newOpt.status]})`,
+                disabled: newOpt.status !== 'available',
+              };
             })}
           />
         )}
