@@ -87,6 +87,8 @@ function CartCard({product, cart_info, changeCheckStatus, removeItem}: CardProps
                       if (curOption === newOpt.option_name) {
                         if (newOpt.status !== 'available') {
                           changeCheckStatus(false);
+                        } else {
+                          changeCheckStatus(true);
                         }
                       }
                       return {
