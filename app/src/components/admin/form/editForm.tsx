@@ -33,7 +33,9 @@ function EditForm({product}: {product: Tables<'products'>}) {
   const [images, setImages] = useState(product.images || []);
   const desc_image: string[] = product.desc_image || [];
 
-  const {options, handleAddOption, handleInputChange, handleRemoveOption} = useAddOption(product.options as Option[]);
+  const {options, handleStatusChange, handleAddOption, handleInputChange, handleRemoveOption} = useAddOption(
+    product.options as Option[],
+  );
 
   const onChangeTitle = (e: ChangeEvent<HTMLInputElement>) => {
     const {value} = e.target;
@@ -144,6 +146,7 @@ function EditForm({product}: {product: Tables<'products'>}) {
               handleAddOption={handleAddOption}
               handleInputChange={handleInputChange}
               handleRemoveOption={handleRemoveOption}
+              handleStatusChange={handleStatusChange}
             />
           ) : (
             <div className="flex gap-4">

@@ -21,6 +21,7 @@ function Page() {
   const [totalCount, setTotalCount] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
   const [isNull, setIsNull] = useState(false);
+  const [checkStatus, setCheckStatus] = useState(true);
   const [isOrder, setIsOrder] = useState(false);
   const fetchData = useCallback(async () => {
     if (cart && cart.cart_list.length > 0 && products.length === 0) {
@@ -39,7 +40,16 @@ function Page() {
   }, [cart, products]);
 
   const openOrder = () => {
+    if (!checkStatus) {
+      return alert(
+        '카트목록에 품절(입고예정)인 상품이 포함되었습니다. \n해당상품을 제거하거나 옵션변경 후 다시 시도하세요',
+      );
+    }
     setIsOrder(prev => !prev);
+  };
+
+  const changeCheckStatus = (status: boolean) => {
+    setCheckStatus(status);
   };
 
   useEffect(() => {
@@ -149,6 +159,7 @@ function Page() {
                 product={products.find(obj => obj.product_id === changeJson(item).id)}
                 cart_info={changeJson(item)}
                 removeItem={removeItem}
+                changeCheckStatus={changeCheckStatus}
               />
             ))}
           </div>

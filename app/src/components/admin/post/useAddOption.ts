@@ -7,6 +7,7 @@ export interface Option {
   option_name: string;
   origin_price: string;
   event_price: string;
+  status: 'available' | 'sold_out' | 'comming_soon' | string;
 }
 
 export function useAddOption(defaultOptions?: Option[]) {
@@ -16,6 +17,7 @@ export function useAddOption(defaultOptions?: Option[]) {
         option_name: '',
         origin_price: '',
         event_price: '',
+        status: 'available',
       },
     ],
   );
@@ -24,6 +26,7 @@ export function useAddOption(defaultOptions?: Option[]) {
     option_name: '',
     origin_price: '',
     event_price: '',
+    status: 'available',
   };
 
   const initOptions = () => {
@@ -32,8 +35,15 @@ export function useAddOption(defaultOptions?: Option[]) {
         option_name: '',
         origin_price: '',
         event_price: '',
+        status: 'available',
       },
     ]);
+  };
+
+  const handleStatusChange = (value, index) => {
+    const newOptions = [...options];
+    newOptions[index]['status'] = value;
+    setOptions(newOptions);
   };
 
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>, index: number) => {
@@ -63,5 +73,5 @@ export function useAddOption(defaultOptions?: Option[]) {
     setOptions(newOptions);
   };
 
-  return {handleInputChange, handleAddOption, handleRemoveOption, options, initOptions};
+  return {handleInputChange, handleAddOption, handleRemoveOption, options, initOptions, handleStatusChange};
 }

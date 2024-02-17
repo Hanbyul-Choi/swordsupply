@@ -30,7 +30,8 @@ function PostForm() {
   const [images, setImages] = useState([]);
   const desc_image: string[] = [];
 
-  const {options, handleAddOption, handleInputChange, handleRemoveOption, initOptions} = useAddOption();
+  const {options, handleStatusChange, handleAddOption, handleInputChange, handleRemoveOption, initOptions} =
+    useAddOption();
 
   const onChangeTitle = (e: ChangeEvent<HTMLInputElement>) => {
     const {value} = e.target;
@@ -143,6 +144,7 @@ function PostForm() {
               handleAddOption={handleAddOption}
               handleInputChange={handleInputChange}
               handleRemoveOption={handleRemoveOption}
+              handleStatusChange={handleStatusChange}
             />
           ) : (
             <div className="flex gap-4">

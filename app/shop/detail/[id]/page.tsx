@@ -6,12 +6,14 @@ import {useQuery, useQueryClient} from '@tanstack/react-query';
 import {Breadcrumb, Select} from 'antd';
 import Link from 'next/link';
 import {BarLoader} from 'react-spinners';
+// import { statusMsg:msg } from '@/app/src/constants/text';
 
 import {getCart, postCart, updateCart} from '@/app/src/api/cart';
 import {getProductsWithBrand} from '@/app/src/api/products';
 import CountControl from '@/app/src/components/common/CountControl';
 import {useCountControl} from '@/app/src/components/common/useCountControl';
 import PriceSection from '@/app/src/components/PriceSection';
+import {STATUS_MSG} from '@/app/src/constants/text';
 import useCartStore from '@/app/src/store/carts.store';
 import useSessionStore from '@/app/src/store/session.store';
 import {addCommas, changeJson, findPrice, isAlreadyCart} from '@/app/src/utils/common';
@@ -152,7 +154,14 @@ function Page({params: {id}, searchParams: {brand}}: {params: {id: string}; sear
                     onChange={handleChange}
                     options={product.options?.map(option => {
                       const newOpt = option as Option;
-                      return {value: newOpt.option_name, label: newOpt.option_name};
+                      return {
+                        value: newOpt.option_name,
+                        label:
+                          newOpt.status === 'available'
+                            ? newOpt.option_name
+                            : newOpt.option_name + `(${STATUS_MSG[newOpt.status]})`,
+                        disabled: newOpt.status !== 'available',
+                      };
                     })}
                   />
                 </div>
