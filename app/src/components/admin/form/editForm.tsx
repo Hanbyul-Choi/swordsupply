@@ -95,7 +95,6 @@ function EditForm({product}: {product: Tables<'products'>}) {
       origin_price: optionsCheck ? '' : origin_price,
       event_price: optionsCheck ? '' : event_price,
     };
-    console.log(newPost.images);
     const data = await updateProducts(newPost, product.product_id);
     if (data) {
       queryClient.refetchQueries({queryKey: [product.brand]});
