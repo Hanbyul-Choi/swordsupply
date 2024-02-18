@@ -2,14 +2,13 @@ import React from 'react';
 
 import {Carousel} from 'antd';
 import Link from 'next/link';
-// autoplay autoplaySpeed={6000}
 
 function MainBanner() {
   return (
     <div className="w-full h-[80vh] flex flex-col justify-center">
       <div className="bg-[url('/main_banner.png')] bg-cover w-full h-[100vh] absolute top-0" />
       <div className="w-full mx-auto ">
-        <Carousel>
+        <Carousel autoplay autoplaySpeed={6000}>
           <div className="flex justify-center items-center w-full p-5 pb-7 bg-[rgba(0,0,0,0.5)] shadow-[1px_4px_7px_0_rgba(0,0,0,0.02)]">
             <div className="bg-[url('/bannerImgs/메인이벤트배너1.jpg')] h-[35vh] md:h-[50vh] bg-center bg-contain bg-no-repeat w-full" />
           </div>
