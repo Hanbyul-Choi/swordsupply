@@ -124,7 +124,7 @@ function Header() {
 
   return (
     <div
-      className={`sticky left-0 top-0 w-full pt-8 flex flex-col justify-center gap-4 z-20 ${
+      className={`sticky left-0 top-0 w-full pt-8 flex flex-col justify-center gap-4 z-[1200] ${
         position < 70 ? 'bg-[#FFFFFF4c]' : 'bg-white  shadow-[1px_2px_4px_0_rgba(53,60,73,0.4)] '
       } `}>
       <div className="flex justify-between items-center mb-4 px-4 sm:px-10">
