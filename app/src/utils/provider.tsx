@@ -4,6 +4,7 @@ import React from 'react';
 
 import {QueryClient, QueryClientProvider} from '@tanstack/react-query';
 import {ReactQueryDevtools} from '@tanstack/react-query-devtools';
+import {ConfigProvider} from 'antd';
 
 import {OverlayProvider} from '../components/overlay/OverlayProvider';
 
@@ -26,7 +27,16 @@ function Providers({children}: Props) {
 
   return (
     <QueryClientProvider client={client}>
-      <OverlayProvider>{children}</OverlayProvider>
+      <ConfigProvider
+        theme={{
+          components: {
+            Dropdown: {
+              zIndexPopupBase: 2000,
+            },
+          },
+        }}>
+        <OverlayProvider>{children}</OverlayProvider>
+      </ConfigProvider>
       <ReactQueryDevtools initialIsOpen={false} />
     </QueryClientProvider>
   );

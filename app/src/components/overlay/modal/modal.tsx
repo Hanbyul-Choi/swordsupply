@@ -28,7 +28,7 @@ export const Modal = ({children, name, ignoreClickOutside}: ModalProps) => {
 
   return (
     <div
-      className="fixed top-0 left-0 z-50 w-screen h-screen bg-black/20"
+      className="fixed top-0 left-0 z-[1500] w-screen h-screen bg-black/20"
       onClick={close}
       onMouseDown={getMouseDownEvent}>
       <div className="flex flex-col gap-8 absolute top-[50%] left-[50%] -translate-x-[50%] -translate-y-[50%] bg-white">
