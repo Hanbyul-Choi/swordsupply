@@ -1,7 +1,7 @@
 'use client';
 import React, {useEffect, useState} from 'react';
 
-import {Dropdown} from 'antd';
+import {Dropdown, theme} from 'antd';
 import Link from 'next/link';
 import {usePathname, useRouter} from 'next/navigation';
 import {BsCart4} from 'react-icons/bs';
@@ -16,6 +16,8 @@ import {getCart} from '../../api/cart';
 import LoginModal from '../LoginModal';
 
 import type {MenuProps} from 'antd';
+
+const {useToken} = theme;
 
 const navMenuItems = [
   {
@@ -41,6 +43,18 @@ function Header() {
   const curPath = usePathname();
   const router = useRouter();
   const [position, setPosition] = useState(curPath === '/' ? 0 : 100);
+
+  const {token} = useToken();
+
+  const menuStyle: React.CSSProperties = {
+    zIndex: token.zIndexPopupBase,
+  };
+
+  const contentStyle: React.CSSProperties = {
+    backgroundColor: token.colorBgElevated,
+    borderRadius: token.borderRadiusLG,
+    boxShadow: token.boxShadowSecondary,
+  };
 
   useEffect(() => {
     function onScroll() {
@@ -134,7 +148,12 @@ function Header() {
         </Link>
         <div className="flex gap-3 sm:gap-10 w-32 justify-center">
           {isLoaded && session ? (
-            <Dropdown menu={{items}} className="cursor-pointer">
+            <Dropdown
+              menu={{items}}
+              className="cursor-pointer"
+              dropdownRender={menu => (
+                <div style={contentStyle}>{React.cloneElement(menu as React.ReactElement, {style: menuStyle})}</div>
+              )}>
               <a onClick={e => e.preventDefault()}>
                 <FaUser size={20} className={`min-[430px]:hidden`} />
                 <FaUser size={25} className={`max-[430px]:hidden`} />
