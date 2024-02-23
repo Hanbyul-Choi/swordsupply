@@ -112,7 +112,7 @@ function Order({totalPrice}) {
     const orderDate = `${today.getFullYear()}.${
       today.getMonth() + 1
     }.${today.getDate()}/${today.getHours()}:${today.getMinutes()}:${today.getSeconds()}`;
-    const price = Number(totalPrice) <= 100000 ? totalPrice + 3000 : totalPrice;
+    const price = Number(totalPrice) < 100000 ? totalPrice + 3000 : totalPrice;
     const orderAddress = {
       address: address.address,
       extra_address: address.extraAddress,
