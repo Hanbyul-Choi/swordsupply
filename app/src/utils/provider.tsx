@@ -27,16 +27,18 @@ function Providers({children}: Props) {
 
   return (
     <QueryClientProvider client={client}>
-      <ConfigProvider
-        theme={{
-          components: {
-            Dropdown: {
-              zIndexPopupBase: 2000,
+      <OverlayProvider>
+        <ConfigProvider
+          theme={{
+            components: {
+              Dropdown: {
+                zIndexPopupBase: 2000,
+              },
             },
-          },
-        }}>
-        <OverlayProvider>{children}</OverlayProvider>
-      </ConfigProvider>
+          }}>
+          {children}
+        </ConfigProvider>
+      </OverlayProvider>
       <ReactQueryDevtools initialIsOpen={false} />
     </QueryClientProvider>
   );
